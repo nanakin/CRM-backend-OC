@@ -6,7 +6,7 @@ from model import Base, Contract, Customer, Employee, Event, Role
 
 
 def db_connect():
-    return create_engine("sqlite://")
+    return create_engine("sqlite:///sample.db")  # relative path
 
 
 def db_create_and_populate(engine):
@@ -19,12 +19,12 @@ def db_list_entries(engine):
     with Session(engine) as session:
         to_list = [Role, Employee, Customer, Contract, Event]
         for table in to_list:
-            stmt = select(table)
-            for item in session.scalars(stmt):
+            items = session.query(table).all()
+            for item in items:
                 print(item)
 
 
 if __name__ == "__main__":
     engine = db_connect()
-    db_create_and_populate(engine)
+    # db_create_and_populate(engine)  # uncomment to populate database
     db_list_entries(engine)
