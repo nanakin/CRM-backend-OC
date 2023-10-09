@@ -1,0 +1,11 @@
+[tool.black]
+line-length = 119
+exclude = '''
+/(
+  venv
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 119
