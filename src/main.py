@@ -11,8 +11,10 @@ def main():
 
     # initialize Model-View-Controller components
     view = View()
-    data = Model(**config["database"])
-    controller = Controller(view, data)
+    model = Model(**config["database"])
+    if config["database"]["reset"] and config["database_sample"]["reset_with_sample"]:
+        model.populate_with_sample()
+    controller = Controller(view, model)
 
     # execute user command
     controller.read_and_execute_command()

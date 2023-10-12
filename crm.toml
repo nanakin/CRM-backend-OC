@@ -2,3 +2,6 @@
 url = "sqlite:///sample.db"
 echo = true
 reset = true
+
+[database_sample] # ignored if reset is false
+reset_with_sample = true
