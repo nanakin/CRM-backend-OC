@@ -21,6 +21,7 @@ class Role(Base):
     name: Mapped[str] = mapped_column(Unicode(127))
     # establish a bidirectional relationship in one-to-many (role-employees)
     # employees: Mapped[List["Employee"]] = relationship(back_populates="role")
+    # addresses = db.relationship('Address', backref='person', lazy=True)
 
     def __repr__(self) -> str:
         return f"Role(id={self.id!r}, name={self.name!r})"

@@ -1,0 +1,4 @@
+[database]
+url = "sqlite:///sample.db"
+echo = true
+reset = true
