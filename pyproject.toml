@@ -1,3 +1,22 @@
+
+[project]
+name = "crm"
+version = "0.1.0"
+description = "CLI CRM application for EpicEvents."
+# readme = "README.md"
+authors = [{ name = "EpicEvents", email = "anna@epicevents.fr" }]
+dependencies = [
+    "click==8.1.7",
+    "rich==13.6.0",
+    "passlib==1.7.4",
+    "phonenumbers==8.13.22",
+    "SQLAlchemy==2.0.21",
+    "SQLAlchemy-Utils==0.41.1",
+    "toml==0.10.2"]
+
+[project.scripts]
+crm = "main:main"
+
 [tool.black]
 line-length = 119
 exclude = '''
