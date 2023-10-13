@@ -47,6 +47,9 @@ class Employee(Base):
     def __repr__(self) -> str:
         return f"Employee(id={self.id!r}, fullname={self.fullname!r}, role_id={self.role_id!r})"
 
+    def as_printable_tuple(self):
+        return str(self.id), self.fullname, self.username
+
 
 class Customer(Base):
     __tablename__ = "customer"
