@@ -1,18 +1,12 @@
 from .manage.employees import EmployeesControllerMixin
+from .manage.customers import CustomersControllerMixin
+from .manage.common import requests_map
 
 
-class Controller(EmployeesControllerMixin):
-
-    @classmethod
-    def _get_allowed_actions(cls, self):
-        allowed = {}
-        for controller in cls.__mro__:
-            if controller.__name__ not in (cls.__name__, "object"):  # to do : verify interface?
-                allowed.update(controller.request_to_action(self))
-        return allowed
+class Controller(EmployeesControllerMixin, CustomersControllerMixin):
 
     def _execute(self, request, param):
-        self.allowed_actions[request](param)
+        requests_map.allowed[request](self, param)
 
     def read_and_execute_command(self):
         returned = self.view.read_user_input()
@@ -22,4 +16,3 @@ class Controller(EmployeesControllerMixin):
     def __init__(self, view, model):
         self.view = view
         self.model = model
-        self.allowed_actions = Controller._get_allowed_actions(self)

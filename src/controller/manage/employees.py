@@ -1,9 +1,10 @@
+from .common import requests_map, Request
+
+
 class EmployeesControllerMixin:
 
-    #view: Any
-    #model: Any
-
-    def list_employees(self, param=None):
+    @requests_map.register(Request.LIST_EMPLOYEES)
+    def list_employees(self):
         data = self.model.get_employees()
         print(data, "employee controller")
         self.view.display_employees(data)
@@ -14,21 +15,15 @@ class EmployeesControllerMixin:
     def new_employee(self):
         pass
 
-    def edit_data_employee(self, id):
+    @requests_map.register(Request.EDIT_EMPLOYEE)
+    def update_employee_data(self, id):
         print("employee controller edit", id)
 
     def set_role_employee(self):
         pass
 
-    def delete_employee(self):
+    def set_password(self):
         pass
 
-    def request_to_action(self):
-        Request = self.view.Request
-
-        return {
-            Request.LIST_EMPLOYEES: self.list_employees,
-            Request.EDIT_EMPLOYEE: self.edit_data_employee}
-
-    # def __init__(self):
-    #     self.allowed_actions = self.request_to_action()
+    def delete_employee(self):
+        pass
