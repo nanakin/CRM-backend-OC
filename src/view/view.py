@@ -5,7 +5,7 @@ from .requests import Request
 
 class View:
 
-    Request = Request
+    #Request = Request
 
     def read_user_input(self):
         return cli_main()

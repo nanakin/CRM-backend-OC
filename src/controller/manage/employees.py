@@ -16,7 +16,7 @@ class EmployeesControllerMixin:
         pass
 
     @requests_map.register(Request.EDIT_EMPLOYEE)
-    def update_employee_data(self, id):
+    def update_employee_data(self, id, fullname, username):
         print("employee controller edit", id)
 
     def set_role_employee(self):
