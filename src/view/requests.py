@@ -1,5 +1,4 @@
 from enum import Enum, auto
-from typing import Any
 
 
 class Request(Enum):
@@ -7,3 +6,5 @@ class Request(Enum):
 
     LIST_EMPLOYEES = auto()
     EDIT_EMPLOYEE = auto()
+    SET_EMPLOYEE_PASSWORD = auto()
+    LIST_CUSTOMERS = auto()
