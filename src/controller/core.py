@@ -1,10 +1,7 @@
-from .manage.employees import EmployeesControllerMixin
-from .manage.customers import CustomersControllerMixin
-from .manage.common import requests_map
-import inspect
+from .manage import EmployeesControllerMixin, CustomersControllerMixin, AuthenticationControllerMixin, requests_map
 
 
-class Controller(EmployeesControllerMixin, CustomersControllerMixin):
+class Controller(EmployeesControllerMixin, CustomersControllerMixin, AuthenticationControllerMixin):
 
     def _execute(self, request, args):
         to_execute = requests_map.allowed[request]

@@ -15,7 +15,7 @@ def cli_main():
     try:
         returned = cli(standalone_mode=False)
         if type(returned) is tuple:
-            request, param = returned
+            request, *param = returned
         else:
             request, param = returned, ()
         return request, param

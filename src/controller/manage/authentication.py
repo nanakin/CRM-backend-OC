@@ -1,4 +1,13 @@
 from .common import requests_map, Request
+import jwt
+
+def require_authentication(role=None):
+    pass
+    # if self.is_authenticated:
+    #     try:
+    #         self.refresh_access_token
+    #     except:
+    #         pass
 
 
 class AuthenticationControllerMixin:
@@ -9,17 +18,23 @@ class AuthenticationControllerMixin:
 
     def is_authenticated(self):
         # return True if a valid token exists else otherwise
+        #jwt.decode(encoded_jwt, "secret", algorithms=["HS256"])
+        # >>_{'some': 'payload'}
         pass
 
     @requests_map.register(Request.LOGIN)
-    def login(self, param=None):
-        print("login")
+    def login(self, username, password):
+        is_valid = self.model.valid_password(username, password)
+        if is_valid:
+            message = "Successful authentication"
+            self.view.info(message)
+        else:
+            message = "Invalid credentials"
+            self.view.warning(message)
+
+        #encoded_jwt = jwt.encode({"username": "username"}, "secret", algorithm="HS256")
         # verify if already login
-        # ask credentials
         # store refresh and access token as environment variable
-        data = self.model.get_employees()
-        print(data, "employee controller")
-        self.view.display_employees(data)
 
     @requests_map.register(Request.LOGOUT)
     def logout(self):

@@ -2,7 +2,7 @@ import click
 from view.requests import Request
 
 
-@click.group(name="authentication")
+@click.group(name="auth")
 def cli_authentication():
     """Commands to manage employees"""
     pass
@@ -10,9 +10,11 @@ def cli_authentication():
 
 @cli_authentication.command(help="Login")
 def login():
-    return Request.LOGIN
+    username = click.prompt("Nom d'utilisateur ")
+    password = click.prompt("Mot de passe ", hide_input=True)
+    return Request.LOGIN, username, password
 
 
 @cli_authentication.command(help="Logout")
-def login():
+def logout():
     return Request.LOGOUT
