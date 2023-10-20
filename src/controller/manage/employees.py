@@ -1,9 +1,10 @@
-from .common import requests_map, Request
+from .common import requests_map, Request, require_authentication, Roles
 
 
 class EmployeesControllerMixin:
 
     @requests_map.register(Request.LIST_EMPLOYEES)
+    @require_authentication(required_role=Roles.ADMINISTRATOR)
     def list_employees(self):
         data = self.model.get_employees()
         print(data, "employee controller")

@@ -1,6 +1,6 @@
 from .display import display_table
 from typing import Any
-
+from rich.prompt import Prompt
 
 def display_employees(data: list[Any]):
     columns_attrs = [
@@ -10,3 +10,8 @@ def display_employees(data: list[Any]):
     ]
     display_table("Employees", columns_attrs, data)
 
+
+def ask_credentials():
+    username = Prompt.ask("Username")
+    password = Prompt.ask("Password", password=True)
+    return username, password
