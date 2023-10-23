@@ -1,5 +1,5 @@
 from .cli_input import cli_main
-from .terminal_output.display import info, warning
+from .terminal_output.display import notification
 from .terminal_output.employees import display_employees, ask_credentials
 from .requests import Request
 
@@ -8,11 +8,8 @@ class View:
 
     #Request = Request
 
-    def info(self, message):
-        info(message)
-
-    def warning(self, message):
-        warning(message)
+    def notification(self, status, message):
+        notification(status, message)
 
     def ask_credentials(self):
         return ask_credentials()

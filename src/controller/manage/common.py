@@ -1,5 +1,7 @@
 from view.requests import Request
+from view.log import LogStatus
 from enum import Enum, auto
+
 
 class Unauthenticated(Exception):
     pass
@@ -29,10 +31,10 @@ def require_authentication(required_role=None):
             try:
                 authenticate_as_role(self)
             except (Unauthenticated, NotEnoughPermission) as e:
-                ret = self.view.warning(str(e))
+                status = LogStatus.WARNING, str(e)
             else:
-                ret = func(self, *args, **kwargs)
-            return ret
+                status = func(self, *args, **kwargs)
+            return status
         return wrapped_f
     return wrap
 
@@ -43,12 +45,17 @@ class RequestsMapping:
         self.allowed = {}
 
     def register(self, request):
-        def wrap(func):
-            self.allowed[request] = func
 
-            def wrapped_f(*args, **kwargs):
-                return func(*args, **kwargs)
-            return wrapped_f
+        def wrap(func):
+            def notif_wrap():
+                def decorated_func(controller, *args, **kwargs):
+                    status = func(controller, *args, **kwargs)
+                    if status:
+                        controller.view.notification(*status)
+
+                return decorated_func
+
+            self.allowed[request] = notif_wrap()
         return wrap
 
 

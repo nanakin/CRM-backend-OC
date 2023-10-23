@@ -1,4 +1,4 @@
-from .common import requests_map, Request, Roles
+from .common import requests_map, Request, Roles, LogStatus
 from collections import namedtuple
 import jwt
 from pathlib import Path
@@ -56,18 +56,14 @@ class AuthenticationControllerMixin:
     def login(self, username, password):
         is_valid = self.login_with_password(username, password)
         if is_valid:
-            message = "Successful authentication"
-            self.view.info(message)
+            return LogStatus.INFO, "Successful authentication"
         else:
-            message = "Invalid credentials"
-            self.view.warning(message)
+            return LogStatus.WARNING, "Invalid credentials"
 
     @requests_map.register(Request.LOGOUT)
     def logout(self):
         if Path.is_file(AUTH_FILENAME):
             Path.unlink(AUTH_FILENAME)
-            message = "Successfully logged out"
-            self.view.info(message)
+            return LogStatus.INFO, "Successfully logged out"
         else:
-            message = "No one to logged out"
-            self.view.warning(message)
+            return LogStatus.WARNING, "No one to logged out"

@@ -7,7 +7,6 @@ class EmployeesControllerMixin:
     @require_authentication()
     def list_employees(self):
         data = self.model.get_employees()
-        print(data, "employee controller")
         self.view.display_employees(data)
 
     def get_employee(self):
@@ -15,8 +14,8 @@ class EmployeesControllerMixin:
 
     @requests_map.register(Request.NEW_EMPLOYEES)
     @require_authentication(Roles.ADMINISTRATOR)
-    def new_employee(self):
-        pass
+    def new_employee(self, username, fullname):
+        status = self.model.add_employee(username, fullname)
 
     @requests_map.register(Request.EDIT_EMPLOYEE)
     def update_employee_data(self, id, fullname, username):
