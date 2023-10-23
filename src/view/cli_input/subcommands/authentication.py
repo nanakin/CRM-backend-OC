@@ -9,8 +9,10 @@ def cli_authentication():
 
 
 @cli_authentication.command(help="Login")
-def login():
-    username = click.prompt("Nom d'utilisateur ")
+@click.option("--username", required=False, type=str, help="")
+def login(username):
+    if not username:
+        username = click.prompt("Nom d'utilisateur ")
     password = click.prompt("Mot de passe ", hide_input=True)
     return Request.LOGIN, username, password
 

@@ -6,6 +6,7 @@ class Request(Enum):
 
     LOGIN = auto()
     LOGOUT = auto()
+    NEW_EMPLOYEES = auto()
     LIST_EMPLOYEES = auto()
     EDIT_EMPLOYEE = auto()
     SET_EMPLOYEE_PASSWORD = auto()

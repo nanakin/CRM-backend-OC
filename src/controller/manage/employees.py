@@ -4,7 +4,7 @@ from .common import requests_map, Request, require_authentication, Roles
 class EmployeesControllerMixin:
 
     @requests_map.register(Request.LIST_EMPLOYEES)
-    @require_authentication(required_role=Roles.ADMINISTRATOR)
+    @require_authentication()
     def list_employees(self):
         data = self.model.get_employees()
         print(data, "employee controller")
@@ -13,6 +13,8 @@ class EmployeesControllerMixin:
     def get_employee(self):
         pass
 
+    @requests_map.register(Request.NEW_EMPLOYEES)
+    @require_authentication(Roles.ADMINISTRATOR)
     def new_employee(self):
         pass
 

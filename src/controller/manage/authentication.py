@@ -1,9 +1,9 @@
 from .common import requests_map, Request, Roles
 from collections import namedtuple
 import jwt
-import os
+from pathlib import Path
 
-TOKEN_NAME = 'CRM_TOKEN'
+AUTH_FILENAME = Path(".auth")
 User = namedtuple("User", "username role")
 
 
@@ -13,15 +13,8 @@ class AuthenticationControllerMixin:
         # update the access token
         pass
 
-    @staticmethod
-    def get_token():
-        return os.getenv(TOKEN_NAME, None)
-
-    def token_authentication(self):
-        token = self.get_token()
-        #jwt.decode(encoded_jwt, "secret", algorithms=["HS256"])
-        # >>_{'some': 'payload'}
-        self.authenticated_user = token  # temporary
+    def get_token(self):
+        return self.load_from_persistent()
 
     def authenticate(self):
         if not self.token_authentication():
@@ -29,12 +22,34 @@ class AuthenticationControllerMixin:
             self.login_with_password(username, password)
         return self.authenticated_user
 
+    def set_authenticated_user(self, username):
+        role_name = self.model.get_role(username)
+        self.authenticated_user = User(username, Roles[role_name])
+
+    def token_authentication(self):
+        username = self.get_token()
+        if username:
+            self.set_authenticated_user(username)
+        return bool(self.authenticated_user)
+
+    def persistent_save(self):
+        with open(AUTH_FILENAME, "w", encoding="utf-8") as f:
+            f.write(self.authenticated_user.username)  # temp
+
+    @staticmethod
+    def load_from_persistent():
+        try:
+            with open(AUTH_FILENAME, encoding="utf-8") as f:
+                username = f.read()  # temp
+        except FileNotFoundError:
+            username = None
+        return username
+
     def login_with_password(self, username, password):
         is_valid = self.model.valid_password(username, password)
         if is_valid:
-            role_name = self.model.get_role(username)
-            self.authenticated_user = User(username, Roles[role_name])
-            os.environ[TOKEN_NAME] = username  # temporary
+            self.set_authenticated_user(username)
+            self.persistent_save()
         return is_valid
 
     @requests_map.register(Request.LOGIN)
@@ -49,7 +64,10 @@ class AuthenticationControllerMixin:
 
     @requests_map.register(Request.LOGOUT)
     def logout(self):
-        # remove all stored tokens
-        print("logout")
-        if TOKEN_NAME in os.environ:
-            os.environ.pop(TOKEN_NAME)
+        if Path.is_file(AUTH_FILENAME):
+            Path.unlink(AUTH_FILENAME)
+            message = "Successfully logged out"
+            self.view.info(message)
+        else:
+            message = "No one to logged out"
+            self.view.warning(message)
