@@ -25,7 +25,7 @@ def setpassword():
 @click.option("--fullname", required=False, type=str, help="Update the employee full name")
 @click.option("--username", required=False, type=str, help="Update the employee username")
 def update(id, fullname, username):
-    return Request.EDIT_EMPLOYEE, (id, fullname, username)
+    return Request.EDIT_EMPLOYEE, id, fullname, username
 
 
 @cli_employee.command(help="List existing employees")
