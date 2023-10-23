@@ -1,8 +1,11 @@
-from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy import create_engine
-from sqlalchemy_utils import database_exists, drop_database, create_database
-from . import Contract, Customer, Employee, Event, Role, Base
 from enum import Enum
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy_utils import database_exists, drop_database
+
+from . import Base, Contract, Customer, Employee, Event, Role
+
 DEFAULT_DB = "sqlite://"
 
 
@@ -16,7 +19,6 @@ def db_list_entries(engine):
 
 
 class Model:
-
     def get_employees(self):
         with self.Session() as session:
             return session.query(Employee).all()
@@ -43,7 +45,7 @@ class Model:
         dict_roles = {}
         for role in roles:
             dict_roles[role.name.upper()] = role.id
-        return Enum('EnumRoles', dict_roles)
+        return Enum("EnumRoles", dict_roles)
 
     def __init__(self, url=DEFAULT_DB, echo=False, reset=False) -> None:
         self.engine = create_engine(url, echo=echo)
@@ -56,4 +58,5 @@ class Model:
 
     def populate_with_sample(self):  # possibility to move this method
         from .model_sample.populate import populate
+
         populate(self.Session)

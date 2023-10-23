@@ -1,4 +1,5 @@
 import click
+
 from view.requests import Request
 
 

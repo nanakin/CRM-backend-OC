@@ -1,4 +1,5 @@
 import click
+
 from view.requests import Request
 
 
@@ -20,7 +21,7 @@ def setpassword():
 
 
 @cli_employee.command(help="Update employee data")
-@click.argument('id', type=int)
+@click.argument("id", type=int)
 @click.option("--fullname", required=False, type=str, help="Update the employee full name")
 @click.option("--username", required=False, type=str, help="Update the employee username")
 def update(id, fullname, username):
@@ -30,4 +31,3 @@ def update(id, fullname, username):
 @cli_employee.command(help="List existing employees")
 def list():
     return Request.LIST_EMPLOYEES
-

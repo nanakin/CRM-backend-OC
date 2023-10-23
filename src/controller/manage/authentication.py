@@ -1,43 +1,34 @@
-from .common import requests_map, Request, Roles, LogStatus
 from collections import namedtuple
-import jwt
+
+# import jwt
 from pathlib import Path
+
+from .common import LogStatus, Request, Roles, requests_map
 
 AUTH_FILENAME = Path(".auth")
 User = namedtuple("User", "username role")
 
 
 class AuthenticationControllerMixin:
+    def _get_token(self):
+        return self._load_from_persistent()
 
-    def refresh_access_token(self):
-        # update the access token
-        pass
-
-    def get_token(self):
-        return self.load_from_persistent()
-
-    def authenticate(self):
-        if not self.token_authentication():
-            username, password = self.view.ask_credentials()
-            self.login_with_password(username, password)
-        return self.authenticated_user
-
-    def set_authenticated_user(self, username):
+    def _set_authenticated_user(self, username):
         role_name = self.model.get_role(username)
         self.authenticated_user = User(username, Roles[role_name])
 
-    def token_authentication(self):
-        username = self.get_token()
+    def _token_authentication(self):
+        username = self._get_token()
         if username:
-            self.set_authenticated_user(username)
+            self._set_authenticated_user(username)
         return bool(self.authenticated_user)
 
-    def persistent_save(self):
+    def _persistent_save(self):
         with open(AUTH_FILENAME, "w", encoding="utf-8") as f:
             f.write(self.authenticated_user.username)  # temp
 
     @staticmethod
-    def load_from_persistent():
+    def _load_from_persistent():
         try:
             with open(AUTH_FILENAME, encoding="utf-8") as f:
                 username = f.read()  # temp
@@ -45,16 +36,26 @@ class AuthenticationControllerMixin:
             username = None
         return username
 
-    def login_with_password(self, username, password):
+    def _login_with_password(self, username, password):
         is_valid = self.model.valid_password(username, password)
         if is_valid:
-            self.set_authenticated_user(username)
-            self.persistent_save()
+            self._set_authenticated_user(username)
+            self._persistent_save()
         return is_valid
+
+    # ---------- used by require_authentication decorator --------------
+
+    def authenticate(self):
+        if not self._token_authentication():
+            username, password = self.view.ask_credentials()
+            self._login_with_password(username, password)
+        return self.authenticated_user
+
+    # -------------------- CRM Commands below --------------------------
 
     @requests_map.register(Request.LOGIN)
     def login(self, username, password):
-        is_valid = self.login_with_password(username, password)
+        is_valid = self._login_with_password(username, password)
         if is_valid:
             return LogStatus.INFO, "Successful authentication"
         else:

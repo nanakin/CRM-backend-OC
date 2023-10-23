@@ -1,9 +1,10 @@
-from typing import Any
-from .sample import *
+from typing import Any, Callable, Iterable
+
 from sqlalchemy.orm import Session
 
+from .sample import get_contracts, get_customers, get_employees, get_events, get_roles
 
-@dataclass
+
 class Populate:
     Session: Session
     roles: dict[str, Any]
@@ -46,7 +47,7 @@ class Populate:
         return self.contracts.values()
 
     @with_session_commit
-    def populate_events(self) -> Iterable[Event]:
+    def populate_events(self) -> Iterable[Any]:
         self.events = get_events(contracts=self.contracts, employees=self.employees)
         return self.events.values()
 

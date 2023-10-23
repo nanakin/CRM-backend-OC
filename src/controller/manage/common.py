@@ -1,6 +1,7 @@
-from view.requests import Request
-from view.log import LogStatus
 from enum import Enum, auto
+
+from view.requests import Request  # noqa
+from view.log import LogStatus
 
 
 class Unauthenticated(Exception):
@@ -18,7 +19,6 @@ class Roles(Enum):
 
 
 def require_authentication(required_role=None):
-
     def authenticate_as_role(self):
         user_profile = self.authenticate()
         if not user_profile:
@@ -35,17 +35,17 @@ def require_authentication(required_role=None):
             else:
                 status = func(self, *args, **kwargs)
             return status
+
         return wrapped_f
+
     return wrap
 
 
 class RequestsMapping:
-
     def __init__(self):
         self.allowed = {}
 
     def register(self, request):
-
         def wrap(func):
             def notif_wrap():
                 def decorated_func(controller, *args, **kwargs):
@@ -56,6 +56,7 @@ class RequestsMapping:
                 return decorated_func
 
             self.allowed[request] = notif_wrap()
+
         return wrap
 
 

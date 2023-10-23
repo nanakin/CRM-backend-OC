@@ -1,6 +1,8 @@
-import click
-from .subcommands import cli_employee, cli_customer, cli_authentication
 import sys
+
+import click
+
+from .subcommands import cli_authentication, cli_customer, cli_employee
 
 
 @click.group()

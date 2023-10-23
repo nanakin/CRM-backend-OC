@@ -1,8 +1,11 @@
+from typing import Any
+
 from rich.table import Table
 from rich.text import Text
-from .console import console
-from typing import Any
+
 from view.log import LogStatus
+
+from .console import console
 
 
 def display_table(title: str, columns_attrs: list[dict], rows: list[Any]) -> None:

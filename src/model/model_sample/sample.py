@@ -1,8 +1,4 @@
 import datetime
-from dataclasses import dataclass
-from typing import Callable, Iterable
-
-from sqlalchemy.orm import Session
 
 from model import Contract, Customer, Employee, Event, Role
 
@@ -100,4 +96,3 @@ def get_events(contracts, employees):
         )
     }
     return events
-
