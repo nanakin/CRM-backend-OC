@@ -10,6 +10,7 @@ def display_employees(data: list[Any]):
         {"header": "ID", "justify": "right", "style": "cyan"},
         {"header": "Nom complet", "justify": "center", "style": "magenta"},
         {"header": "Identifiant", "justify": "left", "style": "yellow"},
+        {"header": "Role", "justify": "left", "style": "green"}
     ]
     display_table("Employees", columns_attrs, data)
 

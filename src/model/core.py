@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
-from . import Base, Contract, Customer, Employee, Event, Role
+from .models import Base, Contract, Customer, Employee, Event, Role
 
 DEFAULT_DB = "sqlite://"
 
