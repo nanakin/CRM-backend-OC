@@ -50,13 +50,14 @@ class Model:
     def __init__(self, url=DEFAULT_DB, echo=False, reset=False) -> None:
         self.engine = create_engine(url, echo=echo)
         self.Session = sessionmaker(self.engine, expire_on_commit=False)
+        self.roles = None
         if reset:
             drop_database(self.engine.url)
         if not database_exists(url):
             Base.metadata.create_all(self.engine)
-        self.roles = self.get_roles()
 
     def populate_with_sample(self):  # possibility to move this method
         from .model_sample.populate import populate
 
         populate(self.Session)
+        self.roles = self.get_roles()

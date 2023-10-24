@@ -13,32 +13,11 @@ class NotEnoughPermission(Exception):
 
 
 class Roles(Enum):
+    NONE = auto()
     COMMERCIAL = auto()
     SUPPORT = auto()
     ADMINISTRATOR = auto()
-
-
-# def require_authentication(required_role=None):
-#     def authenticate_as_role(self):
-#         user_profile = self.authenticate()
-#         if not user_profile:
-#             raise Unauthenticated("Authentication failed.")
-#         if required_role and user_profile.role != required_role:
-#             raise NotEnoughPermission("Authenticated user does not have necessary permissions.")
-#
-#     def wrap(func):
-#         def wrapped_f(self, *args, **kwargs):
-#             try:
-#                 authenticate_as_role(self)
-#             except (Unauthenticated, NotEnoughPermission) as e:
-#                 status = LogStatus.WARNING, str(e)
-#             else:
-#                 status = func(self, *args, **kwargs)
-#             return status
-#
-#         return wrapped_f
-#
-#     return wrap
+    ALL = auto()
 
 
 class RequestsMapping:
@@ -51,7 +30,7 @@ class RequestsMapping:
             user_profile = controller.authenticate()
             if not user_profile:
                 raise Unauthenticated("Authentication failed.")
-            if required_role and user_profile.role != required_role:
+            if required_role != Roles.ALL and user_profile.role != required_role:
                 raise NotEnoughPermission("Authenticated user does not have necessary permissions.")
 
         def wrap(func):

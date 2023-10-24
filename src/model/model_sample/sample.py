@@ -5,6 +5,7 @@ from model import Contract, Customer, Employee, Event, Role
 
 def get_roles():
     roles = {
+        "none": Role(name="none"),
         "commercial": Role(name="commercial"),
         "support": Role(name="support"),
         "administrator": Role(name="administrator"),

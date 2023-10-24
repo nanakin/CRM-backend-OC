@@ -4,7 +4,7 @@ from .common import LogStatus, Request, Roles, requests_map
 class EmployeesControllerMixin:
     # -------------------- CRM Commands below --------------------------
 
-    @requests_map.register(Request.LIST_EMPLOYEES)
+    @requests_map.register(Request.LIST_EMPLOYEES, required_role=Roles.ALL)
     def list_employees(self):
         data = self.model.get_employees()
         self.view.display_employees(data)
