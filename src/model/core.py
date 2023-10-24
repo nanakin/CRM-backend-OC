@@ -1,11 +1,10 @@
 from enum import Enum
 
 from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
-from .models import Base, Contract, Customer, Employee, Event, Role
+from .models import Base, Contract, Customer, Employee, EmployeeModelMixin, Event, Role
 
 DEFAULT_DB = "sqlite://"
 
@@ -19,36 +18,7 @@ def db_list_entries(engine):
                 print(item)
 
 
-class Model:
-    def get_employees(self):
-        with self.Session() as session:
-            return session.query(Employee).all()
-
-    def add_employee(self, username, fullname):
-        employee = Employee(username=username, fullname=fullname, password="", role_id=self.roles.NONE.value)
-        try:
-            with self.Session() as session:
-                session.add(employee)
-                session.commit()
-        except IntegrityError as e:
-            return None
-        return employee.as_printable_dict()
-
-    def get_employee(self, username):
-        with self.Session() as session:
-            return session.query(Employee).filter_by(username=username).one_or_none()
-
-    def valid_password(self, username, password):
-        employee = self.get_employee(username)
-        if not employee:
-            return False
-        return employee.valid_password(password)
-
-    def get_role(self, username):
-        employee = self.get_employee(username)
-        if not employee:
-            return False
-        return self.roles(employee.role_id).name
+class Model(EmployeeModelMixin):
 
     def get_roles(self):
         with self.Session() as session:

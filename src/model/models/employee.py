@@ -1,6 +1,8 @@
 from sqlalchemy import ForeignKey, String, Unicode
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy_utils import PasswordType
+from sqlalchemy.exc import IntegrityError
+
 from .common import Base
 
 
@@ -35,3 +37,35 @@ class Employee(Base):
 
     def as_printable_tuple(self):
         return str(self.id), self.fullname, self.username, str(self.role_id)
+
+
+class EmployeeModelMixin:
+    def get_employees(self):
+        with self.Session() as session:
+            return session.query(Employee).all()
+
+    def add_employee(self, username, fullname):
+        employee = Employee(username=username, fullname=fullname, password="", role_id=self.roles.NONE.value)
+        try:
+            with self.Session() as session:
+                session.add(employee)
+                session.commit()
+        except IntegrityError as e:
+            return None
+        return employee.as_printable_dict()
+
+    def get_employee(self, username):
+        with self.Session() as session:
+            return session.query(Employee).filter_by(username=username).one_or_none()
+
+    def valid_password(self, username, password):
+        employee = self.get_employee(username)
+        if not employee:
+            return False
+        return employee.valid_password(password)
+
+    def get_role(self, username):
+        employee = self.get_employee(username)
+        if not employee:
+            return False
+        return self.roles(employee.role_id).name
