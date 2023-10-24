@@ -1,4 +1,4 @@
-from enum import Enum, auto
+from enum import Enum, auto, Flag
 
 from view.requests import Request  # noqa
 from view.log import LogStatus
@@ -12,12 +12,12 @@ class NotEnoughPermission(Exception):
     pass
 
 
-class Roles(Enum):
+class Roles(Flag):
     NONE = auto()
     COMMERCIAL = auto()
     SUPPORT = auto()
     ADMINISTRATOR = auto()
-    ALL = auto()
+    ALL = COMMERCIAL | SUPPORT | ADMINISTRATOR
 
 
 class RequestsMapping:
@@ -30,7 +30,7 @@ class RequestsMapping:
             user_profile = controller.authenticate()
             if not user_profile:
                 raise Unauthenticated("Authentication failed.")
-            if required_role != Roles.ALL and user_profile.role != required_role:
+            if user_profile.role not in required_role:
                 raise NotEnoughPermission("Authenticated user does not have necessary permissions.")
 
         def wrap(func):
