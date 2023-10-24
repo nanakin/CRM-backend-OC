@@ -15,9 +15,11 @@ class EmployeesControllerMixin:
     @requests_map.register(Request.NEW_EMPLOYEE, required_role=Roles.ADMINISTRATOR)
     def new_employee(self, username, fullname):
         employee = self.model.add_employee(username, fullname)
-        if employee is not None:
+        if employee:
             self.view.display_employee(employee)
             return LogStatus.INFO, "Employee successfully created"
+        else:
+            return LogStatus.WARNING, "Something went wrong"
 
     @requests_map.register(Request.EDIT_EMPLOYEE, required_role=Roles.ADMINISTRATOR)
     def update_employee_data(self, id, fullname, username):

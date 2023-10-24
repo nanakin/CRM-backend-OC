@@ -10,8 +10,14 @@ def cli_employee():
 
 
 @cli_employee.command(help="Add a new employee")
-def add():
-    pass
+@click.option("--fullname", required=False, type=str, help="Define the employee full name")
+@click.option("--username", required=False, type=str, help="Define the employee username")
+def add(username, fullname):
+    if not fullname:
+        fullname = click.prompt("Full name")
+    if not username:
+        username = click.prompt("Username")
+    return Request.NEW_EMPLOYEE, username, fullname
 
 
 @cli_employee.command(help="Set a new password")

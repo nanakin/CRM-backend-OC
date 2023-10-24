@@ -1,6 +1,7 @@
 from enum import Enum
 
 from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
@@ -22,6 +23,16 @@ class Model:
     def get_employees(self):
         with self.Session() as session:
             return session.query(Employee).all()
+
+    def add_employee(self, username, fullname):
+        employee = Employee(username=username, fullname=fullname, password="", role_id=self.roles.NONE.value)
+        try:
+            with self.Session() as session:
+                session.add(employee)
+                session.commit()
+        except IntegrityError as e:
+            return None
+        return employee.as_printable_dict()
 
     def get_employee(self, username):
         with self.Session() as session:
@@ -55,6 +66,8 @@ class Model:
             drop_database(self.engine.url)
         if not database_exists(url):
             Base.metadata.create_all(self.engine)
+        else:
+            self.roles = self.get_roles()
 
     def populate_with_sample(self):  # possibility to move this method
         from .model_sample.populate import populate

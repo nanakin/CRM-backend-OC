@@ -47,7 +47,6 @@ class AuthenticationControllerMixin:
 
     def authenticate(self):
         if not self._token_authentication():
-            print("This action requires user authentication")
             username, password = self.view.ask_credentials()
             self._login_with_password(username, password)
         return self.authenticated_user

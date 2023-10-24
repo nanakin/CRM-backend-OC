@@ -48,10 +48,13 @@ class Employee(Base):
         return f"Employee(id={self.id!r}, fullname={self.fullname!r}, role_id={self.role_id!r})"
 
     def valid_password(self, password):
+        if self.password is None:
+            return False
         return self.password == password
 
-    def as_printable_tuple(self):
-        return str(self.id), self.fullname, self.username
+    def as_printable_dict(self):
+        return {"id": str(self.id), "Full name": self.fullname, "Username": self.username,
+                "Role": str(self.role_id)}
 
 
 class Customer(Base):
