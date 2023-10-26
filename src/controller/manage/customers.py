@@ -1,9 +1,31 @@
-from .common import Request, requests_map
+from .common import Request, Roles, requests_map
 
 
 class CustomersControllerMixin:
     # -------------------- CRM Commands below --------------------------
 
-    @requests_map.register(Request.LIST_CUSTOMERS)
+    @requests_map.register(Request.LIST_CUSTOMERS, required_role=Roles.ALL)
     def list_customers(self):
-        print("list customers")
+        displayable_customers = self.model.get_customers()
+        self.view.display_customers(displayable_customers)
+
+    @requests_map.register(Request.DETAIL_CUSTOMER, required_role=Roles.ALL)
+    def get_customer(self, id):
+        displayable_customer = self.model.detail_customer(id)
+        if displayable_customer:
+            self.view.display_customer(displayable_customer)
+
+    @requests_map.register(Request.NEW_CUSTOMER, required_role=Roles.COMMERCIAL)
+    def new_customer(self, fullname, company, email, phone):
+        print(fullname, company, email, phone)
+        displayable_customer = self.model.add_customer(fullname, company, email, phone, commercial=None)
+        if displayable_customer:
+            self.view.display_customer(displayable_customer)
+
+    @requests_map.register(Request.EDIT_CUSTOMER, required_role=Roles.COMMERCIAL)
+    def update_customer_data(self, id, fullname, company, email, phone):
+        self.model.update_customer_data(id, fullname, company, email, phone)
+
+    @requests_map.register(Request.SET_CUSTOMER_COMMERCIAL, required_role=Roles.ADMINISTRATOR)
+    def set_customer_commercial(self, id, commercial_username):
+        self.model.set_customer_commercial(id, commercial_username)

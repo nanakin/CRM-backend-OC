@@ -1,4 +1,4 @@
-from .common import LogStatus, Request, Roles, requests_map
+from .common import Request, Roles, requests_map
 
 
 class EmployeesControllerMixin:

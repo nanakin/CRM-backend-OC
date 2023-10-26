@@ -65,6 +65,7 @@ def get_customers(employees):
             fullname="Inès Pradelle",
             email="ines.pradelle@gmail.com",
             phone="+33673890044",
+            company="",
             commercial_contact_id=employees["christophe"].id,
         ),
     }

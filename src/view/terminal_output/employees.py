@@ -8,8 +8,8 @@ from .display import display_table, display_panel
 def display_employees(data: list[Any]):
     columns_attrs = [
         {"header": "ID", "justify": "right", "style": "cyan"},
-        {"header": "Nom complet", "justify": "center", "style": "magenta"},
-        {"header": "Identifiant", "justify": "left", "style": "yellow"},
+        {"header": "Full name", "justify": "center", "style": "magenta"},
+        {"header": "Username", "justify": "left", "style": "yellow"},
         {"header": "Role", "justify": "left", "style": "green"}
     ]
     display_table("Employees", columns_attrs, data)

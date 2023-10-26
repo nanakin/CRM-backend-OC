@@ -15,4 +15,8 @@ class Request(Enum):
     SET_EMPLOYEE_ROLE = auto()
     DELETE_EMPLOYEE = auto()
 
+    NEW_CUSTOMER = auto()
+    DETAIL_CUSTOMER = auto()
     LIST_CUSTOMERS = auto()
+    EDIT_CUSTOMER = auto()
+    SET_CUSTOMER_COMMERCIAL = auto()
