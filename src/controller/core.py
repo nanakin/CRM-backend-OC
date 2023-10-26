@@ -9,7 +9,8 @@ class Controller(EmployeesControllerMixin, CustomersControllerMixin, Authenticat
 
     def read_and_execute_command(self):
         request, parameters = self.view.read_user_input()
-        self._execute(request, *parameters)
+        if request:
+            self._execute(request, *parameters)
 
     def __init__(self, view, model):
         self.view = view
