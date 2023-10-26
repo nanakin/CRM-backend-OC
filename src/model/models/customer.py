@@ -1,10 +1,9 @@
 from datetime import datetime
-import  phonenumbers
 from sqlalchemy import DateTime, ForeignKey, Unicode
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 from sqlalchemy_utils import EmailType, PhoneNumberType
-
+from sqlalchemy_utils.types.phone_number import PhoneNumberParseException
 from .common import Base, OperationFailed
 
 
@@ -53,13 +52,15 @@ class CustomerModelMixin:
         customer = self._get_customer(id)
         return customer.as_printable_dict()
 
-    def add_customer(self, fullname, company, email, phone, commercial):
-        print("phone", phone)
-        valide_phone = phonenumbers.parse(phone, None)
-        customer = Customer(fullname=fullname, email=email, phone=phone, company=company, commercial_contact_id=1)  # to change
-        with self.Session() as session:
-            session.add(customer)
-            session.commit()
+    def add_customer(self, fullname, company, email, phone, commercial_username):
+        employee = self._get_employee(username=commercial_username)
+        try:
+            customer = Customer(fullname=fullname, email=email, phone=phone, company=company, commercial_contact_id=employee.id)
+            with self.Session() as session:
+                session.add(customer)
+                session.commit()
+        except PhoneNumberParseException:
+            raise OperationFailed(f"Invalid phone number format ({phone})")
         return customer.as_printable_dict()
 
     def update_customer_data(self, id, fullname, company, email, phone):

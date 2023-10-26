@@ -17,8 +17,7 @@ class CustomersControllerMixin:
 
     @requests_map.register(Request.NEW_CUSTOMER, required_role=Roles.COMMERCIAL)
     def new_customer(self, fullname, company, email, phone):
-        print(fullname, company, email, phone)
-        displayable_customer = self.model.add_customer(fullname, company, email, phone, commercial=None)
+        displayable_customer = self.model.add_customer(fullname, company, email, phone, commercial_username=self.authenticated_user.username)
         if displayable_customer:
             self.view.display_customer(displayable_customer)
 
