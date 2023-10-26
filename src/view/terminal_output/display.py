@@ -35,12 +35,12 @@ def notification(status, message):
 
 
 def info(message):
-    text = Text(message)
+    text = Text("✅ " + message)
     text.stylize("bold green")
     console.print(text)
 
 
 def warning(message):
-    text = Text(message)
+    text = Text("⚠️  " + message)
     text.stylize("bold red")
     console.print(text)

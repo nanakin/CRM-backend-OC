@@ -2,8 +2,10 @@ from sqlalchemy import ForeignKey, String, Unicode
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy_utils import PasswordType
 from sqlalchemy.exc import IntegrityError
+import random
+import string
 
-from .common import Base
+from .common import Base, OperationFailed
 
 
 class Employee(Base):
@@ -51,7 +53,7 @@ class EmployeeModelMixin:
                 session.add(employee)
                 session.commit()
         except IntegrityError as e:
-            return None
+            raise OperationFailed(e)
         return employee.as_printable_dict()
 
     def get_employee(self, username):
@@ -59,10 +61,11 @@ class EmployeeModelMixin:
             return session.query(Employee).filter_by(username=username).one_or_none()
 
     def valid_password(self, username, password):
-        employee = self.get_employee(username)
-        if not employee:
-            return False
-        return employee.valid_password(password)
+        employee = self._get_employee(username=username, missing_ok=True)
+        if employee:
+            return employee.valid_password(password)
+        else:
+            return None
 
     def get_role(self, username):
         employee = self.get_employee(username)

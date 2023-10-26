@@ -2,16 +2,10 @@ from enum import Enum, auto, Flag
 
 from view.requests import Request  # noqa
 from view.log import LogStatus
+from model import OperationFailed
 
 
-class Unauthenticated(Exception):
-    pass
-
-
-class NotEnoughPermission(Exception):
-    pass
-
-
+# create enum from DB values ?
 class Roles(Flag):
     NONE = auto()
     COMMERCIAL = auto()
@@ -29,9 +23,9 @@ class RequestsMapping:
         def authenticate_as_role(controller):
             user_profile = controller.authenticate()
             if not user_profile:
-                raise Unauthenticated("Authentication failed.")
+                raise OperationFailed("Authentication failed.")
             if user_profile.role not in required_role:
-                raise NotEnoughPermission("Authenticated user does not have necessary permissions.")
+                raise OperationFailed("Authenticated user does not have necessary permissions.")
 
         def wrap(func):
             def notif_and_authenticate_wrap(controller, *args, **kwargs):
@@ -40,12 +34,15 @@ class RequestsMapping:
                     if required_role is not None:
                         try:
                             authenticate_as_role(controller)
-                        except (Unauthenticated, NotEnoughPermission) as e:
+                        except OperationFailed as e:
                             controller.view.notification(LogStatus.WARNING, str(e))
                             return
-                    status = func(*args, **kwargs)
-                    if status:
-                        controller.view.notification(*status)
+                    try:
+                        func(*args, **kwargs)
+                    except OperationFailed as e:
+                        controller.view.notification(LogStatus.WARNING, str(e))
+                    else:
+                        controller.view.notification(LogStatus.INFO, "Successful operation.")
 
                 return decorated_func(controller, *args)
 

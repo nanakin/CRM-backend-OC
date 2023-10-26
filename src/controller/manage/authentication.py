@@ -3,7 +3,7 @@ from collections import namedtuple
 # import jwt
 from pathlib import Path
 
-from .common import LogStatus, Request, Roles, requests_map
+from .common import LogStatus, Request, Roles, requests_map, OperationFailed
 
 AUTH_FILENAME = Path(".auth")
 User = namedtuple("User", "username role")
@@ -56,15 +56,10 @@ class AuthenticationControllerMixin:
     @requests_map.register(Request.LOGIN)
     def login(self, username, password):
         is_valid = self._login_with_password(username, password)
-        if is_valid:
-            return LogStatus.INFO, "Successful authentication"
-        else:
-            return LogStatus.WARNING, "Invalid credentials"
+        if not is_valid:
+            raise OperationFailed("Invalid credentials.")
 
     @requests_map.register(Request.LOGOUT)
     def logout(self):
         if Path.is_file(AUTH_FILENAME):
             Path.unlink(AUTH_FILENAME)
-            return LogStatus.INFO, "Successfully logged out"
-        else:
-            return LogStatus.WARNING, "No one to logged out"
