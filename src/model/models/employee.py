@@ -44,10 +44,12 @@ class Employee(Base):
 class EmployeeModelMixin:
     def get_employees(self):
         with self.Session() as session:
-            return session.query(Employee).all()
+            result = session.query(Employee).all()
+        return result
 
     def add_employee(self, username, fullname):
-        employee = Employee(username=username, fullname=fullname, password="", role_id=self.roles.NONE.value)
+        generated_password = "".join(random.choices(string.ascii_lowercase, k=12))
+        employee = Employee(username=username, fullname=fullname, password=generated_password, role_id=self.roles.NONE.value)
         try:
             with self.Session() as session:
                 session.add(employee)
@@ -56,9 +58,22 @@ class EmployeeModelMixin:
             raise OperationFailed(e)
         return employee.as_printable_dict()
 
-    def get_employee(self, username):
+    def delete_employee(self, username):
+        employee = self._get_employee(username)
         with self.Session() as session:
-            return session.query(Employee).filter_by(username=username).one_or_none()
+            session.delete(employee)
+            session.commit()
+
+    def _get_employee(self, username=None, id=None, missing_ok=False):
+        result = None
+        with self.Session() as session:
+            if username:
+                result = session.query(Employee).filter_by(username=username).one_or_none()
+            else:
+                result = session.query(Employee).filter_by(id=id).one_or_none()
+        if not missing_ok and result is None:
+            raise OperationFailed(f"Cannot find the employee {username if username else id}")
+        return result
 
     def valid_password(self, username, password):
         employee = self._get_employee(username=username, missing_ok=True)
@@ -68,7 +83,37 @@ class EmployeeModelMixin:
             return None
 
     def get_role(self, username):
-        employee = self.get_employee(username)
-        if not employee:
-            return False
+        employee = self._get_employee(username=username)
         return self.roles(employee.role_id).name
+
+    def set_role(self, username, role_name):
+        valid_roles_names = [role.name for role in self.roles]
+        if role_name.upper() not in valid_roles_names:
+            raise OperationFailed(f"Invalid role, choose between: {' '.join(valid_roles_names)}.")
+        role_id = self.roles[role_name.upper()].value
+        employee = self._get_employee(username=username)
+        with self.Session() as session:
+            employee.role_id = role_id
+            session.add(employee)
+            session.commit()
+
+    def set_password(self, username, password):
+        employee = self._get_employee(username=username)
+        with self.Session() as session:
+            employee.password = password
+            session.add(employee)
+            session.commit()
+
+    def update_employee_data(self, id, username, fullname):
+        employee = self._get_employee(id=id)
+        with self.Session() as session:
+            if username:
+                employee.username = username
+            else:
+                employee.fullname = fullname
+            session.add(employee)
+            session.commit()
+
+    def detail_employee(self, username):
+        employee = self._get_employee(username)
+        return employee.as_printable_dict()
