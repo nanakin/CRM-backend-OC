@@ -52,7 +52,7 @@ class CustomerModelMixin:
         return customer.as_printable_dict()
 
     def add_customer(self, fullname, company, email, phone, commercial_username):
-        employee = self._get_employee(username=commercial_username)
+        employee = self._get_employee(username=commercial_username)  # store ID in controller self.authenticated_user ?
         try:
             with self.Session() as session:
                 customer = Customer(fullname=fullname, email=email, phone=phone, company=company,
@@ -63,9 +63,12 @@ class CustomerModelMixin:
         except PhoneNumberParseException:
             raise OperationFailed(f"Invalid phone number format ({phone})")
 
-    def update_customer_data(self, id, fullname, company, email, phone):
+    def update_customer_data(self, id, fullname, company, email, phone, commercial_contact_filter):
+        employee = self._get_employee(username=commercial_contact_filter) # store ID in controller self.authenticated_user ?
         with self.Session() as session:
             customer = session.query(Customer).filter_by(id=id).one_or_none()
+            if customer.commercial_contact_id != employee.id:
+                raise OperationFailed(f"The employee {employee.fullname} does not have the permission to edit the customer {customer.fullname}.")
             if fullname:
                 customer.fullname = fullname
             if email:

@@ -25,7 +25,7 @@ class RequestsMapping:
             if not user_profile:
                 raise OperationFailed("Authentication failed.")
             if user_profile.role not in required_role:
-                raise OperationFailed("Authenticated user does not have necessary permissions.")
+                raise OperationFailed(f"{user_profile.username} does not have necessary permissions. The operation requires role {required_role.name}.")  # print user full name
 
         def wrap(func):
             def notif_and_authenticate_wrap(controller, *args, **kwargs):

@@ -21,7 +21,8 @@ class CustomersControllerMixin:
 
     @requests_map.register(Request.EDIT_CUSTOMER, required_role=Roles.COMMERCIAL)
     def update_customer_data(self, id, fullname, company, email, phone):
-        displayable_customer = self.model.update_customer_data(id, fullname, company, email, phone)
+        displayable_customer = self.model.update_customer_data(id, fullname, company, email, phone,
+                                                               commercial_contact_filter=self.authenticated_user.username)
         self.view.display_customer(displayable_customer,
                                    focus=("Company" if company else None,
                                           "Full name" if fullname else None,
