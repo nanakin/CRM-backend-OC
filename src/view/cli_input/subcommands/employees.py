@@ -50,6 +50,7 @@ def detail(username):
     return Request.DETAIL_EMPLOYEE, username
 
 
+@click.option('--role-filter', type=click.Choice(['SUPPORT', 'ADMINISTRATOR', 'COMMERCIAL'], case_sensitive=False), default=None)
 @cli_employee.command(help="List existing employees")
-def list():
-    return Request.LIST_EMPLOYEES
+def list(role_filter):
+    return Request.LIST_EMPLOYEES, role_filter

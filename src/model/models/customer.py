@@ -66,7 +66,7 @@ class CustomerModelMixin:
     def update_customer_data(self, id, fullname, company, email, phone, commercial_contact_filter):
         employee = self._get_employee(username=commercial_contact_filter) # store ID in controller self.authenticated_user ?
         with self.Session() as session:
-            customer = session.query(Customer).filter_by(id=id).one_or_none()
+            customer = session.query(Customer).filter_by(id=id).one_or_none()  # replace by the call to _get_customer to raise not found
             if customer.commercial_contact_id != employee.id:
                 raise OperationFailed(f"The employee {employee.fullname} does not have the permission to edit the customer {customer.fullname}.")
             if fullname:
@@ -85,7 +85,7 @@ class CustomerModelMixin:
     def set_customer_commercial(self, id, commercial_username):
         employee = self._get_employee(username=commercial_username)
         with self.Session() as session:
-            customer = session.query(Customer).filter_by(id=id).one_or_none()
+            customer = session.query(Customer).filter_by(id=id).one_or_none() # replace by the call to _get_customer to raise not found
             customer.commercial_contact_id = employee.id
             session.add(customer)
             session.commit()

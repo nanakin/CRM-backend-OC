@@ -6,7 +6,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.sql import func
 from sqlalchemy.types import Uuid
 
-from .common import Base
+from .common import Base, OperationFailed
 
 
 class Contract(Base):

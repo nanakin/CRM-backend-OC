@@ -44,9 +44,13 @@ class Employee(Base):
 
 
 class EmployeeModelMixin:
-    def get_employees(self):
+    def get_employees(self, role_filter_value=None):
         with self.Session() as session:
-            result = session.query(Employee).all()
+            if role_filter_value:
+                role_id = self.roles[role_filter_value.upper()].value
+                result = session.query(Employee).filter_by(role_id=role_id)
+            else:
+                result = session.query(Employee).all()
             return [row.as_printable_tuple() for row in result]
 
     def add_employee(self, username, fullname):

@@ -5,8 +5,8 @@ class EmployeesControllerMixin:
     # -------------------- CRM Commands below --------------------------
 
     @requests_map.register(Request.LIST_EMPLOYEES, required_role=Roles.ALL)
-    def list_employees(self):
-        displayable_employees = self.model.get_employees()
+    def list_employees(self, role_filter):
+        displayable_employees = self.model.get_employees(role_filter)
         self.view.display_employees(displayable_employees)
 
     @requests_map.register(Request.DETAIL_EMPLOYEE, required_role=Roles.ALL)
