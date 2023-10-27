@@ -6,7 +6,7 @@ from .display import display_table, display_panel
 
 
 def display_employees(data: list[Any]):
-    columns_attrs = [
+    columns_attrs = [  # fill column name with the dictionary keys
         {"header": "ID", "justify": "right", "style": "cyan"},
         {"header": "Full name", "justify": "center", "style": "magenta"},
         {"header": "Username", "justify": "left", "style": "yellow"},
@@ -15,8 +15,8 @@ def display_employees(data: list[Any]):
     display_table("Employees", columns_attrs, data)
 
 
-def display_employee(employee):
-    display_panel("Employee", employee["Full name"], employee)
+def display_employee(employee, focus=None):
+    display_panel(title="Employee", subtitle=employee["Full name"], focus=focus, **employee)
 
 
 def ask_credentials():

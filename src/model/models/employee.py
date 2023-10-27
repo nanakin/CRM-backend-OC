@@ -34,7 +34,7 @@ class Employee(Base):
         return self.password == password
 
     def as_printable_dict(self):
-        return {"id": str(self.id), "Full name": self.fullname, "Username": self.username,
+        return {"ID": str(self.id), "Full name": self.fullname, "Username": self.username,
                 "Role": str(self.role_id)}
 
     def as_printable_tuple(self):
@@ -44,8 +44,7 @@ class Employee(Base):
 class EmployeeModelMixin:
     def get_employees(self):
         with self.Session() as session:
-            result = session.query(Employee).all()
-        return result
+            return session.query(Employee).all()  # return printable ?
 
     def add_employee(self, username, fullname):
         generated_password = "".join(random.choices(string.ascii_lowercase, k=12))
@@ -54,9 +53,9 @@ class EmployeeModelMixin:
             with self.Session() as session:
                 session.add(employee)
                 session.commit()
+                return employee.as_printable_dict()
         except IntegrityError as e:
             raise OperationFailed(e)
-        return employee.as_printable_dict()
 
     def delete_employee(self, username):
         employee = self._get_employee(username)
@@ -71,6 +70,7 @@ class EmployeeModelMixin:
                 result = session.query(Employee).filter_by(username=username).one_or_none()
             else:
                 result = session.query(Employee).filter_by(id=id).one_or_none()
+            session.commit()  # necessary ?
         if not missing_ok and result is None:
             raise OperationFailed(f"Cannot find the employee {username if username else id}")
         return result
@@ -96,6 +96,7 @@ class EmployeeModelMixin:
             employee.role_id = role_id
             session.add(employee)
             session.commit()
+            return employee.as_printable_dict()
 
     def set_password(self, username, password):
         employee = self._get_employee(username=username)
@@ -113,6 +114,7 @@ class EmployeeModelMixin:
                 employee.fullname = fullname
             session.add(employee)
             session.commit()
+            return employee.as_printable_dict()
 
     def detail_employee(self, username):
         employee = self._get_employee(username)

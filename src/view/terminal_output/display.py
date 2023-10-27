@@ -19,11 +19,11 @@ def display_table(title: str, columns_attrs: list[dict], rows: list[Any]) -> Non
     console.print(table)
 
 
-def display_panel(title: str, subtitle: str, kwargs):
+def display_panel(title: str, subtitle: str, focus: list | None, **kwargs):
     to_print = Text()
     for key, value in kwargs.items():
-        to_print.append(key + ": ", style="cyan")
-        to_print.append(value + "\n", style="magenta")
+        to_print.append(key + ": ", style="sky_blue2")
+        to_print.append(value + "\n", style="yellow" if focus and key in focus else "cyan")
     console.print(Panel(to_print, title=title, subtitle=subtitle, expand=False), justify="center    ")
 
 

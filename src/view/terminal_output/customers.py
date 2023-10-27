@@ -13,5 +13,6 @@ def display_customers(data: list[Any]):
     display_table("Customers", columns_attrs, data)
 
 
-def display_customer(customer):
-    display_panel("Customer", customer["Full name"], customer)
+def display_customer(customer, focus=None):
+    print("display_customer", focus)
+    display_panel(title="Customer", subtitle=customer["Full name"], focus=focus, **customer)

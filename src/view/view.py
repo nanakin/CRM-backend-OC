@@ -17,14 +17,14 @@ class View:
     def display_employees(self, data):
         display_employees(data)
 
-    def display_employee(self, employee):
-        display_employee(employee)
+    def display_employee(self, employee, focus=None):
+        display_employee(employee, focus)
 
     def display_customers(self, data):
         display_customers(data)
 
-    def display_customer(self, employee):
-        display_customer(employee)
+    def display_customer(self, employee, focus=None):
+        display_customer(employee, focus)
 
     def __init__(self):
         pass
