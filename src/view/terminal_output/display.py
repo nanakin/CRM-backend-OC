@@ -14,8 +14,7 @@ def display_table(title: str, columns_attrs: list[dict], rows: list[Any]) -> Non
     for column_attrs in columns_attrs:
         table.add_column(**column_attrs)
     for row in rows:
-        elements = row.as_printable_tuple()
-        table.add_row(*elements)
+        table.add_row(*row)
     console.print(table)
 
 

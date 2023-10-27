@@ -38,7 +38,6 @@ def setrole(username, role):
 
 @cli_employee.command(help="Update employee data")
 @click.argument("id", type=int)
-#@click.option("--prompt-all", is_flag=True)
 @click.option("--fullname", default=None, prompt=False, prompt_required=False, type=str, help="Define the new full name")
 @click.option("--username", default=None, prompt=False, prompt_required=True, type=str, help="Define the new username")
 def update(id, username, fullname):

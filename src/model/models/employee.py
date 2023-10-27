@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey, String, Unicode
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import PasswordType
 from sqlalchemy.exc import IntegrityError
 import random
@@ -22,8 +22,9 @@ class Employee(Base):
         )
     )
     role_id: Mapped[int] = mapped_column(ForeignKey("role.id"))
-    # establish a bidirectional relationship in one-to-many (role-employees)
-    # role: Mapped["Role"] = relationship(back_populates="employees")
+    # relation one-to-many (role-employees)
+    role: Mapped["Role"] = relationship(lazy='subquery')
+
 
     def __repr__(self) -> str:
         return f"Employee(id={self.id!r}, fullname={self.fullname!r}, role_id={self.role_id!r})"
@@ -34,17 +35,19 @@ class Employee(Base):
         return self.password == password
 
     def as_printable_dict(self):
-        return {"ID": str(self.id), "Full name": self.fullname, "Username": self.username,
-                "Role": str(self.role_id)}
+        return {"ID": str(self.id), "Full name": string.capwords(self.fullname), "Username": self.username,
+                "Role": self.role.name.title()}
 
     def as_printable_tuple(self):
-        return str(self.id), self.fullname, self.username, str(self.role_id)
+        printable = self.as_printable_dict()
+        return printable["ID"], printable["Full name"], printable["Username"], printable["Role"]
 
 
 class EmployeeModelMixin:
     def get_employees(self):
         with self.Session() as session:
-            return session.query(Employee).all()  # return printable ?
+            result = session.query(Employee).all()
+            return [row.as_printable_tuple() for row in result]
 
     def add_employee(self, username, fullname):
         generated_password = "".join(random.choices(string.ascii_lowercase, k=12))
