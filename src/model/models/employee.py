@@ -22,7 +22,6 @@ class Employee(Base):
         )
     )
     role_id: Mapped[int] = mapped_column(ForeignKey("role.id"))
-    # relation one-to-many (role-employees)
     role: Mapped["Role"] = relationship(lazy='subquery')
 
 
@@ -48,9 +47,9 @@ class EmployeeModelMixin:
         with self.Session() as session:
             if role_filter_value:
                 role_id = self.roles[role_filter_value.upper()].value
-                result = session.query(Employee).filter_by(role_id=role_id)
+                result = session.query(Employee).filter_by(role_id=role_id).order_by(Employee.fullname)
             else:
-                result = session.query(Employee).all()
+                result = session.query(Employee).order_by(Employee.fullname)
             return [row.as_printable_tuple() for row in result]
 
     def add_employee(self, username, fullname):

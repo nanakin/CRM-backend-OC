@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy import DateTime, ForeignKey, Unicode
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from sqlalchemy_utils import EmailType, PhoneNumberType
 from sqlalchemy_utils.types.phone_number import PhoneNumberParseException
@@ -16,6 +16,7 @@ class Customer(Base):
     phone: Mapped[str] = mapped_column(PhoneNumberType)
     company: Mapped[str] = mapped_column(Unicode(255), nullable=True)
     commercial_contact_id: Mapped[int] = mapped_column(ForeignKey("employee.id"))
+    commercial_contact: Mapped["Employee"] = relationship(lazy='subquery')
     creation_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     last_modified: Mapped[datetime] = mapped_column(DateTime(timezone=True),  server_default=func.now(), onupdate=func.now())
 
@@ -24,13 +25,13 @@ class Customer(Base):
                f"creation_date={self.creation_date!r}, last_modified={self.last_modified!r})"
 
     def as_printable_dict(self):
-        return {"ID": str(self.id), "Full name": self.fullname, "Company": self.company,  "Commercial": str(self.commercial_contact_id),
+        return {"ID": str(self.id), "Full name": self.fullname, "Company": self.company,  "Commercial": str(self.commercial_contact.fullname),
                 "Email": str(self.email), "Phone": str(self.phone), "Creation date": str(self.creation_date),
                 "Last modification": str(self.last_modified)}
 
     def as_printable_tuple(self):
-        return str(self.id), self.fullname, self.company, str(self.commercial_contact_id)
-
+        printable = self.as_printable_dict()
+        return printable["ID"], printable["Full name"], printable["Company"], printable["Commercial"]
 
 class CustomerModelMixin:
 
@@ -45,7 +46,8 @@ class CustomerModelMixin:
 
     def get_customers(self):
         with self.Session() as session:
-            return session.query(Customer).all()  # return printable ?
+            result = session.query(Customer).order_by(Customer.fullname)
+            return [row.as_printable_tuple() for row in result]
 
     def detail_customer(self, id):
         customer = self._get_customer(id)

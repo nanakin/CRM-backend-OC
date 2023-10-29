@@ -19,7 +19,7 @@ class EmployeesControllerMixin:
         displayable_employee = self.model.add_employee(username, fullname)
         self.view.display_employee(displayable_employee, focus=displayable_employee.keys())
 
-    @requests_map.register(Request.EDIT_EMPLOYEE, required_role=Roles.ADMINISTRATOR)
+    @requests_map.register(Request.UPDATE_EMPLOYEE, required_role=Roles.ADMINISTRATOR)
     def update_employee_data(self, id, username, fullname):
         displayable_employee = self.model.update_employee_data(id, username, fullname)
         self.view.display_employee(displayable_employee,

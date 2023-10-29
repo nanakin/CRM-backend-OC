@@ -25,7 +25,7 @@ def add(fullname, company, email, phone):
 @click.option("--email", default=None, prompt=False, prompt_required=True, type=str, help="Define the new email")
 @click.option("--phone", default=None, prompt=False, prompt_required=True, type=str, help="Define the new phone")
 def update(id, fullname, company, email, phone):
-    return Request.EDIT_CUSTOMER, id, fullname, company, email, phone
+    return Request.UPDATE_CUSTOMER, id, fullname, company, email, phone
 
 
 @click.option("--id",  prompt=True, prompt_required=True, type=str, help="Specify the customer ID")

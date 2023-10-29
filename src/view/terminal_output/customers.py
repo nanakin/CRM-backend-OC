@@ -4,7 +4,7 @@ from .display import display_table, display_panel
 
 
 def display_customers(data: list[Any]):
-    columns_attrs = [
+    columns_attrs = [  # fill column name with the dictionary keys
         {"header": "ID", "justify": "right", "style": "cyan"},
         {"header": "Full name", "justify": "center", "style": "magenta"},
         {"header": "Company", "justify": "left", "style": "yellow"},
