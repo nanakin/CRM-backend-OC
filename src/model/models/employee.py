@@ -24,6 +24,8 @@ class Employee(Base):
     role_id: Mapped[int] = mapped_column(ForeignKey("role.id"))
     role: Mapped["Role"] = relationship(lazy='subquery')
 
+    def __str__(self):
+        return self.fullname
 
     def __repr__(self) -> str:
         return f"Employee(id={self.id!r}, fullname={self.fullname!r}, role_id={self.role_id!r})"
@@ -34,8 +36,8 @@ class Employee(Base):
         return self.password == password
 
     def as_printable_dict(self):
-        return {"ID": str(self.id), "Full name": string.capwords(self.fullname), "Username": self.username,
-                "Role": self.role.name.title()}
+        return {"ID": str(self.id), "Full name": self.fullname, "Username": self.username,
+                "Role": str(self.role)}
 
     def as_printable_tuple(self):
         printable = self.as_printable_dict()

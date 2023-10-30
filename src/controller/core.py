@@ -1,7 +1,7 @@
-from .manage import AuthenticationControllerMixin, CustomersControllerMixin, EmployeesControllerMixin, requests_map
+from .manage import AuthenticationControllerMixin, CustomersControllerMixin, EmployeesControllerMixin, EventsControllerMixin, requests_map
 
 
-class Controller(EmployeesControllerMixin, CustomersControllerMixin, AuthenticationControllerMixin):
+class Controller(EmployeesControllerMixin, CustomersControllerMixin, EventsControllerMixin, AuthenticationControllerMixin):
     def _execute(self, request, *args):
         to_execute = requests_map.allowed[request]
         method_arguments = self, *args

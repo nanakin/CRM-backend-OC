@@ -14,5 +14,4 @@ def display_customers(data: list[Any]):
 
 
 def display_customer(customer, focus=None):
-    print("display_customer", focus)
     display_panel(title="Customer", subtitle=customer["Full name"], focus=focus, **customer)

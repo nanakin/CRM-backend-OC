@@ -20,11 +20,14 @@ class Contract(Base):
     total_payed: Mapped[int] = mapped_column(Integer, default=0)
     creation_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
+    def __str__(self):
+        return str(self.id).upper()
+
     def __repr__(self) -> str:
         return f"Contract(id={self.id!r}, customer_id={self.customer_id!r}, signed={self.signed!r}), total_amount={self.total_amount!r})"
 
     def as_printable_dict(self):
-        return {"UUID": str(self.id).upper(), "Customer": str(self.customer.fullname), "Signed": str(self.signed),
+        return {"UUID": str(self.id).upper(), "Customer": str(self.customer), "Signed": str(self.signed),
                 "Total amount": str(self.total_amount) + " €", "Total due": str(self.total_amount - self.total_payed) + " €",
                 "Creation date": str(self.creation_date)}
 
@@ -35,9 +38,9 @@ class Contract(Base):
 
 class ContractModelMixin:
 
-    def is_user_authorized(self, connected_employee, contract):
+    def verify_contract_authorization(self, connected_employee, contract):
         if connected_employee.role.name.upper() == self.roles.COMMERCIAL.name.upper():  # to change
-            if contract.customer.commercial_contact.id != connected_employee.id:
+            if contract.customer.commercial_contact != connected_employee:
                 raise OperationFailed(
                     f"The employee {connected_employee.fullname} does not have the permission to edit {contract.customer.fullname} contracts (linked to {contract.customer.commercial_contact.fullname})")
 
@@ -63,8 +66,8 @@ class ContractModelMixin:
                     result = session.query(Contract).filter(Contract.signed == False, Contract.total_payed < Contract.total_amount)
             return [row.as_printable_tuple() for row in result]
 
-    def detail_contract(self, contract_id):
-        contract = self._get_contract(contract_id)
+    def detail_contract(self, contract_uuid):
+        contract = self._get_contract(contract_uuid)
         return contract.as_printable_dict()
 
     def add_contract(self, customer_id, total_amount):
@@ -74,10 +77,10 @@ class ContractModelMixin:
             session.commit()
             return contract.as_printable_dict()
 
-    def sign_contract(self, contract_id, authenticated_user):
+    def sign_contract(self, contract_uuid, authenticated_user):
         employee = self._get_employee(username=authenticated_user)  # store ID in controller self.authenticated_user ?
-        contract = self._get_contract(contract_id)
-        self.is_user_authorized(employee, contract)
+        contract = self._get_contract(contract_uuid)
+        self.verify_contract_authorization(employee, contract)
         with self.Session() as session:
             contract.signed = True
             session.add(contract)
@@ -87,7 +90,7 @@ class ContractModelMixin:
     def update_contract(self, contract_uuid, customer_id, total_amount, authenticated_user):
         employee = self._get_employee(username=authenticated_user)  # store ID in controller self.authenticated_user ?
         contract = self._get_contract(contract_uuid)
-        self.is_user_authorized(employee, contract)
+        self.verify_contract_authorization(employee, contract)
         with self.Session() as session:
             if total_amount:
                 contract.total_amount = total_amount
@@ -100,7 +103,7 @@ class ContractModelMixin:
     def add_contract_payment(self, contract_uuid, paid_amount, authenticated_user):
         employee = self._get_employee(username=authenticated_user)  # store ID in controller self.authenticated_user ?
         contract = self._get_contract(contract_uuid)
-        self.is_user_authorized(employee, contract)
+        self.verify_contract_authorization(employee, contract)
         with self.Session() as session:
             contract.total_payed = contract.total_payed + paid_amount
             session.add(contract)

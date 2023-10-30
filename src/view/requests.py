@@ -27,3 +27,9 @@ class Request(Enum):
     SIGN_CONTRACT = auto()
     ADD_CONTRACT_PAYMENT = auto()
     UPDATE_CONTRACT = auto()
+
+    NEW_EVENT = auto()
+    DETAIL_EVENT = auto()
+    LIST_EVENTS = auto()
+    SET_EVENT_SUPPORT = auto()
+    UPDATE_EVENT = auto()

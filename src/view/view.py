@@ -3,6 +3,7 @@ from .terminal_output.display import notification
 from .terminal_output.employees import ask_credentials, display_employees, display_employee
 from .terminal_output.customers import display_customers, display_customer
 from .terminal_output.contracts import display_contracts, display_contract
+from .terminal_output.events import display_events, display_event
 
 
 class View:
@@ -32,6 +33,12 @@ class View:
 
     def display_contract(self, contract, focus=None):
         display_contract(contract, focus)
+
+    def display_events(self, events):
+        display_events(events)
+
+    def display_event(self, event, focus=None):
+        display_event(event, focus)
 
     def __init__(self):
         pass

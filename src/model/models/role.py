@@ -13,5 +13,8 @@ class Role(Base):
     # establish a bidirectional one-to-many relationship (role-employees)
     # employees: Mapped[List["Employee"]] = relationship(back_populates="role")
 
+    def __str__(self):
+        return self.name
+
     def __repr__(self) -> str:
         return f"Role(id={self.id!r}, name={self.name!r})"

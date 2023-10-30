@@ -28,15 +28,15 @@ def update(id, fullname, company, email, phone):
     return Request.UPDATE_CUSTOMER, id, fullname, company, email, phone
 
 
+@cli_customer.command(help="Set a new commercial contact")
 @click.option("--id",  prompt=True, prompt_required=True, type=str, help="Specify the customer ID")
 @click.option("--username",  prompt=True, prompt_required=True, type=str, help="Specify the username of the commercial")
-@cli_customer.command(help="Set a new commercial contact")
-def setcommercial(id, username):
+def set_commercial(id, username):
     return Request.SET_CUSTOMER_COMMERCIAL, id, username
 
 
-@click.option("--id", prompt=True, prompt_required=True, type=str, help="Specify the customer ID")
 @cli_customer.command(help="Show customer details")
+@click.option("--id", prompt=True, prompt_required=True, type=str, help="Specify the customer ID")
 def detail(id):
     return Request.DETAIL_CUSTOMER, id
 

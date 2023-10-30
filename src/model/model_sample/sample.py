@@ -79,7 +79,7 @@ def get_contracts(customers):
         "Withings_party": Contract(
             customer_id=customers["Withings"].id,
             signed=True,
-        ),
+        )
     }
     return contracts
 
@@ -95,6 +95,16 @@ def get_events(contracts, employees):
             attendees=2000,
             location="Jardin des plantes de Paris",
             note="En cas de pluie, déplacer les chaises dans la salle de projection.",
+        ),
+        "BK_opening": Event(
+            name="Inauguration d'un nouveau BK",
+            contract_id=contracts["BK_announcement"].id,
+            support_contact_id=employees["sarah"].id,
+            start=datetime.datetime(year=2024, month=5, day=20, hour=20),
+            end=datetime.datetime(year=2024, month=5, day=20, hour=21),
+            attendees=300,
+            location="Théatre de Fontainebleau",
+            note="Évenement accessible au public, sur réservation. Prévoir des pancartes.",
         )
     }
     return events

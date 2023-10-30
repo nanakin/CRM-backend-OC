@@ -22,9 +22,9 @@ def sign(uuid):
     return Request.SIGN_CONTRACT, uuid
 
 
+@cli_contract.command(help="Add a new payment")
 @click.option("--uuid",  prompt=True, prompt_required=True, type=click.UUID, help="Specify the contract")
 @click.option("--payment",  prompt=True, prompt_required=True, default=0, type=int, help="Specify the amount paid")
-@cli_contract.command(help="Add a new payment")
 def add_payment(uuid, payment):
     return Request.ADD_CONTRACT_PAYMENT, uuid, payment
 
@@ -38,14 +38,14 @@ def update(uuid, customer_id, total_amount):
     return Request.UPDATE_CONTRACT, uuid, customer_id, total_amount
 
 
-@click.option("--uuid", prompt=True, prompt_required=True, type=click.UUID, help="Specify the contract")
 @cli_contract.command(help="Show contract detail")
+@click.option("--uuid", prompt=True, prompt_required=True, type=click.UUID, help="Specify the contract")
 def detail(uuid):
     return Request.DETAIL_CONTRACT, uuid
 
 
+@cli_contract.command(help="List existing contracts")
 @click.option('--not-signed-filter', is_flag=True, default=False, help="Display not signed contracts only")
 @click.option('--not-paid-filter', is_flag=True, default=False, help="Display not paid contracts only")
-@cli_contract.command(help="List existing contracts")
 def list(not_signed_filter, not_paid_filter):
     return Request.LIST_CONTRACTS, not_signed_filter, not_paid_filter

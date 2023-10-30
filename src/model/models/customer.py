@@ -20,12 +20,15 @@ class Customer(Base):
     creation_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     last_modified: Mapped[datetime] = mapped_column(DateTime(timezone=True),  server_default=func.now(), onupdate=func.now())
 
+    def __str__(self):
+        return self.fullname
+
     def __repr__(self) -> str:
         return f"Customer(id={self.id!r}, fullname={self.fullname!r}, company={self.company!r}, commercial={self.commercial_contact_id!r}, email={self.email!r}, phone={self.phone!r}"\
                f"creation_date={self.creation_date!r}, last_modified={self.last_modified!r})"
 
     def as_printable_dict(self):
-        return {"ID": str(self.id), "Full name": self.fullname, "Company": self.company,  "Commercial": str(self.commercial_contact.fullname),
+        return {"ID": str(self.id), "Full name": self.fullname, "Company": self.company,  "Commercial": str(self.commercial_contact),
                 "Email": str(self.email), "Phone": str(self.phone), "Creation date": str(self.creation_date),
                 "Last modification": str(self.last_modified)}
 
@@ -85,11 +88,14 @@ class CustomerModelMixin:
             return customer.as_printable_dict()
 
     def set_customer_commercial(self, id, commercial_username):
-        employee = self._get_employee(username=commercial_username)
+        commercial = self._get_employee(username=commercial_username)
+        if commercial.role.name.upper() != self.roles.COMMERCIAL.name.upper():  # temp
+            raise OperationFailed(f"The employee {commercial} assigned as commercial is not a commercial ({commercial.role}).")
         with self.Session() as session:
+            commercial = session.merge(commercial)
             customer = session.query(Customer).filter_by(id=id).one_or_none() # replace by the call to _get_customer to raise not found
-            customer.commercial_contact_id = employee.id
+            customer.commercial_contact_id = commercial.id
+            customer.commercial_contact = commercial
             session.add(customer)
             session.commit()
-            # session.flush()
             return customer.as_printable_dict()

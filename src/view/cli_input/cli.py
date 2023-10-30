@@ -2,7 +2,7 @@ import sys
 
 import click
 
-from .subcommands import cli_authentication, cli_customer, cli_employee, cli_contract
+from .subcommands import cli_authentication, cli_customer, cli_employee, cli_contract, cli_event
 
 
 @click.group()
@@ -15,6 +15,7 @@ def cli_main():
     cli.add_command(cli_customer)
     cli.add_command(cli_authentication)
     cli.add_command(cli_contract)
+    cli.add_command(cli_event)
     try:
         returned = cli(standalone_mode=False)
         if type(returned) is tuple:
