@@ -26,3 +26,5 @@ def cli_main():
     except click.ClickException as exc:
         exc.show()
         sys.exit(click.ClickException.exit_code)
+    except click.exceptions.Abort:
+        sys.exit(0)
