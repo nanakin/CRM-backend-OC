@@ -1,9 +1,10 @@
-from sqlalchemy import ForeignKey, String, Unicode
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy_utils import PasswordType
-from sqlalchemy.exc import IntegrityError
 import random
 import string
+
+from sqlalchemy import ForeignKey, String, Unicode
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy_utils import PasswordType
 
 from .common import Base, OperationFailed
 
@@ -22,7 +23,7 @@ class Employee(Base):
         )
     )
     role_id: Mapped[int] = mapped_column(ForeignKey("role.id"))
-    role: Mapped["Role"] = relationship(lazy='subquery')
+    role: Mapped["Role"] = relationship(lazy="subquery")  # noqa: F821
 
     def __str__(self):
         return self.fullname
@@ -36,8 +37,7 @@ class Employee(Base):
         return self.password == password
 
     def as_printable_dict(self):
-        return {"ID": str(self.id), "Full name": self.fullname, "Username": self.username,
-                "Role": str(self.role)}
+        return {"ID": str(self.id), "Full name": self.fullname, "Username": self.username, "Role": str(self.role)}
 
     def as_printable_tuple(self):
         printable = self.as_printable_dict()
@@ -56,7 +56,9 @@ class EmployeeModelMixin:
 
     def add_employee(self, username, fullname):
         generated_password = "".join(random.choices(string.ascii_lowercase, k=12))
-        employee = Employee(username=username, fullname=fullname, password=generated_password, role_id=self.roles.NONE.value)
+        employee = Employee(
+            username=username, fullname=fullname, password=generated_password, role_id=self.roles.NONE.value
+        )
         try:
             with self.Session() as session:
                 session.add(employee)

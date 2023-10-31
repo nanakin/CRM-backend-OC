@@ -79,7 +79,7 @@ def get_contracts(customers):
         "Withings_party": Contract(
             customer_id=customers["Withings"].id,
             signed=True,
-        )
+        ),
     }
     return contracts
 
@@ -105,6 +105,6 @@ def get_events(contracts, employees):
             attendees=300,
             location="Théatre de Fontainebleau",
             note="Évenement accessible au public, sur réservation. Prévoir des pancartes.",
-        )
+        ),
     }
     return events

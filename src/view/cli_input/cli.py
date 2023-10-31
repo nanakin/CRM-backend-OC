@@ -2,7 +2,7 @@ import sys
 
 import click
 
-from .subcommands import cli_authentication, cli_customer, cli_employee, cli_contract, cli_event
+from .subcommands import cli_authentication, cli_contract, cli_customer, cli_employee, cli_event
 
 
 @click.group()

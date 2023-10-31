@@ -1,6 +1,6 @@
 from typing import Any
 
-from .display import display_table, display_panel
+from .display import display_panel, display_table
 
 
 def display_events(data: list[Any]):
@@ -10,7 +10,7 @@ def display_events(data: list[Any]):
         {"header": "Contract", "justify": "left", "style": "yellow"},
         {"header": "Support", "justify": "left", "style": "yellow"},
         {"header": "Commercial", "justify": "left", "style": "green"},
-        {"header": "Start", "justify": "left", "style": "green"}
+        {"header": "Start", "justify": "left", "style": "green"},
     ]
     display_table("Events", columns_attrs, data)
 

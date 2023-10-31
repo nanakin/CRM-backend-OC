@@ -1,9 +1,9 @@
+import sentry_sdk
 import toml
 
 from controller import Controller
 from model import Model
 from view import View
-import sentry_sdk
 
 
 def sentry_setup():
@@ -17,7 +17,6 @@ def sentry_setup():
 
 
 def main():
-
     # keep errors log
     sentry_setup()
 

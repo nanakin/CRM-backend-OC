@@ -4,7 +4,18 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
-from .models import Base, Contract, ContractModelMixin, Customer, CustomerModelMixin, Employee, EmployeeModelMixin, Event,EventModelMixin, Role, OperationFailed
+from .models import (
+    Base,
+    Contract,
+    ContractModelMixin,
+    Customer,
+    CustomerModelMixin,
+    Employee,
+    EmployeeModelMixin,
+    Event,
+    EventModelMixin,
+    Role,
+)
 
 DEFAULT_DB = "sqlite://"
 
@@ -19,7 +30,6 @@ def db_list_entries(engine):
 
 
 class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventModelMixin):
-
     def get_roles(self):
         with self.Session() as session:
             roles = session.query(Role).all()

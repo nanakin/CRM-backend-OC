@@ -1,8 +1,8 @@
 from typing import Any
 
+from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
-from rich.panel import Panel
 
 from view.log import LogStatus
 

@@ -3,7 +3,7 @@ from collections import namedtuple
 # import jwt
 from pathlib import Path
 
-from .common import LogStatus, Request, Roles, requests_map, OperationFailed
+from .common import OperationFailed, Request, Roles, requests_map
 
 AUTH_FILENAME = Path(".auth")
 User = namedtuple("User", "username role")

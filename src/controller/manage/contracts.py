@@ -27,12 +27,11 @@ class ContractsControllerMixin:
     @requests_map.register(Request.UPDATE_CONTRACT, required_role=Roles.ADMINISTRATOR | Roles.COMMERCIAL)
     def update_contract(self, contract_uuid, customer_id, total_amount):
         displayable_contract = self.model.update_contract(contract_uuid, customer_id, total_amount)
-        self.view.display_contract(displayable_contract, focus=("Total amount" if total_amount else None,
-                                                                "Customer" if customer_id else None))
+        self.view.display_contract(
+            displayable_contract, focus=("Total amount" if total_amount else None, "Customer" if customer_id else None)
+        )
 
     @requests_map.register(Request.SIGN_CONTRACT, required_role=Roles.ADMINISTRATOR | Roles.COMMERCIAL)
     def sign_contract(self, contract_uuid):
         displayable_contract = self.model.sign_contract(contract_uuid, self.authenticated_user.username)
         self.view.display_contract(displayable_contract, focus=("Signed",))
-
-

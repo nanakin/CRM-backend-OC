@@ -20,7 +20,9 @@ def add(fullname, company, email, phone):
 
 @cli_customer.command(help="Update customer data")
 @click.argument("id", type=int)
-@click.option("--fullname", default=None, prompt=False, prompt_required=False, type=str, help="Define the new full name")
+@click.option(
+    "--fullname", default=None, prompt=False, prompt_required=False, type=str, help="Define the new full name"
+)
 @click.option("--company", default=None, prompt=False, prompt_required=True, type=str, help="Define the new company")
 @click.option("--email", default=None, prompt=False, prompt_required=True, type=str, help="Define the new email")
 @click.option("--phone", default=None, prompt=False, prompt_required=True, type=str, help="Define the new phone")
@@ -29,8 +31,8 @@ def update(id, fullname, company, email, phone):
 
 
 @cli_customer.command(help="Set a new commercial contact")
-@click.option("--id",  prompt=True, prompt_required=True, type=str, help="Specify the customer ID")
-@click.option("--username",  prompt=True, prompt_required=True, type=str, help="Specify the username of the commercial")
+@click.option("--id", prompt=True, prompt_required=True, type=str, help="Specify the customer ID")
+@click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the username of the commercial")
 def set_commercial(id, username):
     return Request.SET_CUSTOMER_COMMERCIAL, id, username
 

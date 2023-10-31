@@ -1,9 +1,9 @@
 from .cli_input import cli_main
+from .terminal_output.contracts import display_contract, display_contracts
+from .terminal_output.customers import display_customer, display_customers
 from .terminal_output.display import notification
-from .terminal_output.employees import ask_credentials, display_employees, display_employee
-from .terminal_output.customers import display_customers, display_customer
-from .terminal_output.contracts import display_contracts, display_contract
-from .terminal_output.events import display_events, display_event
+from .terminal_output.employees import ask_credentials, display_employee, display_employees
+from .terminal_output.events import display_event, display_events
 
 
 class View:

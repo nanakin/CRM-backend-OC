@@ -16,7 +16,9 @@ class EventsControllerMixin:
 
     @requests_map.register(Request.NEW_EVENT, required_role=Roles.COMMERCIAL)
     def new_event(self, contract_uuid, name):
-        displayable_event = self.model.add_event(contract_uuid, name, authenticated_user=self.authenticated_user.username)
+        displayable_event = self.model.add_event(
+            contract_uuid, name, authenticated_user=self.authenticated_user.username
+        )
         self.view.display_event(displayable_event, focus=displayable_event.keys())
 
     @requests_map.register(Request.SET_EVENT_SUPPORT, required_role=Roles.ADMINISTRATOR)
@@ -26,11 +28,17 @@ class EventsControllerMixin:
 
     @requests_map.register(Request.UPDATE_EVENT, required_role=Roles.SUPPORT)
     def update_event(self, event_id, name, start, end, attendees, location, note):
-        displayable_event = self.model.update_event(event_id, name, start, end, attendees, location, note, authenticated_user=self.authenticated_user.username)
-        self.view.display_event(displayable_event,
-                                focus=("Name" if name else None,
-                                       "Start" if start else None,
-                                       "End" if end else None,
-                                       "Attendees" if attendees else None,
-                                       "Location" if location else None,
-                                       "Note" if note else None))
+        displayable_event = self.model.update_event(
+            event_id, name, start, end, attendees, location, note, authenticated_user=self.authenticated_user.username
+        )
+        self.view.display_event(
+            displayable_event,
+            focus=(
+                "Name" if name else None,
+                "Start" if start else None,
+                "End" if end else None,
+                "Attendees" if attendees else None,
+                "Location" if location else None,
+                "Note" if note else None,
+            ),
+        )

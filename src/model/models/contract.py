@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import uuid4
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from sqlalchemy.types import Uuid
 
@@ -14,7 +14,7 @@ class Contract(Base):
 
     id: Mapped[Uuid] = mapped_column(Uuid, primary_key=True, default=uuid4)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customer.id"))
-    customer: Mapped["Customer"] = relationship(lazy='subquery')
+    customer: Mapped["Customer"] = relationship(lazy="subquery")  # noqa: F821
     signed: Mapped[bool] = mapped_column(Boolean, default=False)
     total_amount: Mapped[int] = mapped_column(Integer, default=0)
     total_payed: Mapped[int] = mapped_column(Integer, default=0)
@@ -24,12 +24,20 @@ class Contract(Base):
         return str(self.id).upper()
 
     def __repr__(self) -> str:
-        return f"Contract(id={self.id!r}, customer_id={self.customer_id!r}, signed={self.signed!r}), total_amount={self.total_amount!r})"
+        return (
+            f"Contract(id={self.id!r}, customer_id={self.customer_id!r}, signed={self.signed!r}), "
+            f"total_amount={self.total_amount!r})"
+        )
 
     def as_printable_dict(self):
-        return {"UUID": str(self.id).upper(), "Customer": str(self.customer), "Signed": str(self.signed),
-                "Total amount": str(self.total_amount) + " €", "Total due": str(self.total_amount - self.total_payed) + " €",
-                "Creation date": str(self.creation_date)}
+        return {
+            "UUID": str(self.id).upper(),
+            "Customer": str(self.customer),
+            "Signed": str(self.signed),
+            "Total amount": str(self.total_amount) + " €",
+            "Total due": str(self.total_amount - self.total_payed) + " €",
+            "Creation date": str(self.creation_date),
+        }
 
     def as_printable_tuple(self):
         printable = self.as_printable_dict()
@@ -37,12 +45,14 @@ class Contract(Base):
 
 
 class ContractModelMixin:
-
     def verify_contract_authorization(self, connected_employee, contract):
         if connected_employee.role.name.upper() == self.roles.COMMERCIAL.name.upper():  # to change
             if contract.customer.commercial_contact != connected_employee:
                 raise OperationFailed(
-                    f"The employee {connected_employee.fullname} does not have the permission to edit {contract.customer.fullname} contracts (linked to {contract.customer.commercial_contact.fullname})")
+                    f"The employee {connected_employee.fullname} does not have the permission to edit "
+                    f"{contract.customer.fullname} contracts (linked to "
+                    f"{contract.customer.commercial_contact.fullname})"
+                )
 
     def _get_contract(self, contract_uuid=None, missing_ok=False):
         result = None
@@ -59,11 +69,13 @@ class ContractModelMixin:
                 result = session.query(Contract)
             else:
                 if not_signed_filter and not not_paid_filter:
-                    result = session.query(Contract).filter(Contract.signed == False)
+                    result = session.query(Contract).filter(Contract.signed == False)  # noqa: E712
                 elif not not_signed_filter and not_paid_filter:
                     result = session.query(Contract).filter(Contract.total_payed < Contract.total_amount)
                 else:
-                    result = session.query(Contract).filter(Contract.signed == False, Contract.total_payed < Contract.total_amount)
+                    result = session.query(Contract).filter(
+                        Contract.signed == False, Contract.total_payed < Contract.total_amount  # noqa: E712
+                    )
             return [row.as_printable_tuple() for row in result]
 
     def detail_contract(self, contract_uuid):

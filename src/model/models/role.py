@@ -1,8 +1,9 @@
 from sqlalchemy import Unicode
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
+
 from .common import Base
 
-from typing import List
+# from typing import List
 
 
 class Role(Base):

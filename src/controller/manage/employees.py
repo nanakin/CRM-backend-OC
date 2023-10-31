@@ -22,9 +22,9 @@ class EmployeesControllerMixin:
     @requests_map.register(Request.UPDATE_EMPLOYEE, required_role=Roles.ADMINISTRATOR)
     def update_employee_data(self, id, username, fullname):
         displayable_employee = self.model.update_employee_data(id, username, fullname)
-        self.view.display_employee(displayable_employee,
-                                   focus=("Username" if username else None,
-                                          "Full name" if fullname else None))
+        self.view.display_employee(
+            displayable_employee, focus=("Username" if username else None, "Full name" if fullname else None)
+        )
 
     @requests_map.register(Request.SET_EMPLOYEE_ROLE, required_role=Roles.ADMINISTRATOR)
     def set_role_employee(self, username, role_name):

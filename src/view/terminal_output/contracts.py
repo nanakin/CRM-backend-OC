@@ -1,6 +1,6 @@
 from typing import Any
 
-from .display import display_table, display_panel
+from .display import display_panel, display_table
 
 
 def display_contracts(data: list[Any]):
@@ -8,7 +8,7 @@ def display_contracts(data: list[Any]):
         {"header": "Uuid", "justify": "right", "style": "cyan"},
         {"header": "Customer", "justify": "center", "style": "magenta"},
         {"header": "Signed", "justify": "left", "style": "yellow"},
-        {"header": "Amount due", "justify": "left", "style": "green"}
+        {"header": "Amount due", "justify": "left", "style": "green"},
     ]
     display_table("Contracts", columns_attrs, data)
 

@@ -1,8 +1,8 @@
-from enum import Enum, auto, Flag
+from enum import Flag, auto
 
-from view.requests import Request  # noqa
-from view.log import LogStatus
 from model import OperationFailed
+from view.log import LogStatus
+from view.requests import Request  # noqa
 
 
 # create enum from DB values ?
@@ -19,17 +19,17 @@ class RequestsMapping:
         self.allowed = {}
 
     def register(self, request, required_role=None):
-
         def authenticate_as_role(controller):
             user_profile = controller.authenticate()
             if not user_profile:
                 raise OperationFailed("Authentication failed.")
             if user_profile.role not in required_role:
-                raise OperationFailed(f"{user_profile.username} does not have necessary permissions.")  # print user full name
+                raise OperationFailed(
+                    f"{user_profile.username} does not have necessary permissions."
+                )  # print user full name
 
         def wrap(func):
             def notif_and_authenticate_wrap(controller, *args, **kwargs):
-
                 def decorated_func(*args, **kwargs):
                     if required_role is not None:
                         try:

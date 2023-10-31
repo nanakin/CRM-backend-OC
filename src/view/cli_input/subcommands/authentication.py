@@ -10,7 +10,7 @@ def cli_authentication():
 
 
 @cli_authentication.command(help="Login")
-@click.option("--username",  prompt=True, prompt_required=True, type=str, help="Specify the employee")
+@click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the employee")
 @click.option("--password", prompt=True, hide_input=True)
 def login(username, password):
     return Request.LOGIN, username, password
