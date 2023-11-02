@@ -1,7 +1,11 @@
+[error_tracing]
+record = false
+
 [database]
 url = "sqlite:///sample.db"
-echo = true
-reset = true
+echo = false
+reset = false
 
 [database_sample] # ignored if reset is false
 reset_with_sample = true
+
