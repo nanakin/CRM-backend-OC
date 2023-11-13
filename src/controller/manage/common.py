@@ -44,7 +44,7 @@ class RequestsMapping:
                     else:
                         controller.view.notification(LogStatus.INFO, "Successful operation.")
 
-                return decorated_func(controller, *args)
+                return decorated_func(controller, *args, **kwargs)
 
             self.allowed[request] = notif_and_authenticate_wrap
 

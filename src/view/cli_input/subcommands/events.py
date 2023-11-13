@@ -1,12 +1,11 @@
 import click
 
-from view.requests import Request
+from view.requests import Request, FullRequest
 
 
 @click.group(name="event")
-def cli_event():
-    """Commands to manage events"""
-    pass
+def cli_event() -> None:
+    """Commands to manage events."""
 
 
 @cli_event.command(help="Add a new event")
@@ -14,15 +13,17 @@ def cli_event():
     "--contract-uuid", prompt=True, prompt_required=True, type=click.UUID, help="Define the related contract"
 )
 @click.option("--name", prompt=True, prompt_required=True, type=str, help="Define the event name")
-def add(contract_uuid, name):
-    return Request.NEW_EVENT, contract_uuid, name
+def add(**kwargs) -> FullRequest:
+    """Command to add a new event."""
+    return FullRequest(Request.NEW_EVENT, **kwargs)
 
 
 @cli_event.command(help="Set a new support contact")
 @click.option("--id", prompt=True, prompt_required=True, type=int, help="Specify the event")
 @click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the support")
-def set_support(id, username):
-    return Request.SET_EVENT_SUPPORT, id, username
+def set_support(**kwargs) -> FullRequest:
+    """Command to set a new support contact."""
+    return FullRequest(Request.SET_EVENT_SUPPORT, **kwargs)
 
 
 @cli_event.command(help="Update event data")
@@ -39,19 +40,22 @@ def set_support(id, username):
 )
 @click.option("--location", default=None, prompt=False, prompt_required=False, type=str, help="Define the location")
 @click.option("--note", default=None, prompt=False, prompt_required=False, type=str, help="Define a note")
-def update(id, name, start, end, attendees, location, note):
+def update(**kwargs) -> FullRequest:
+    """Command to update an event data (name, start, end, attendees, location and note fields)."""
     # to-do: if no option, prompt
-    return Request.UPDATE_EVENT, id, name, start, end, attendees, location, note
+    return FullRequest(Request.UPDATE_EVENT, **kwargs)
 
 
 @cli_event.command(help="Show event detail")
 @click.option("--id", prompt=True, prompt_required=True, type=int, help="Specify the event")
-def detail(id):
-    return Request.DETAIL_EVENT, id
+def detail(**kwargs) -> FullRequest:
+    """Command to show event details."""
+    return FullRequest(Request.DETAIL_EVENT, **kwargs)
 
 
 @cli_event.command(help="List existing events")
 @click.option("--not-signed-filter", is_flag=True, default=False, help="Display not signed contracts only")
 @click.option("--not-paid-filter", is_flag=True, default=False, help="Display not paid contracts only")
-def list(not_signed_filter, not_paid_filter):
-    return Request.LIST_EVENTS, not_signed_filter, not_paid_filter
+def list(**kwargs) -> FullRequest:
+    """Command to list existing events."""
+    return FullRequest(Request.LIST_EVENTS, **kwargs)

@@ -11,13 +11,13 @@ from view.requests import FullRequest
 @click.group()
 def cli() -> None:
     """CRM application allows employees, customers, contracts and events management."""
-    pass
 
 
 def cli_main() -> FullRequest | None:
     """Deal with CLI.
 
     Returns understandable requests to the controller."""
+
     cli.add_command(cli_employee)
     cli.add_command(cli_customer)
     cli.add_command(cli_authentication)
@@ -26,20 +26,12 @@ def cli_main() -> FullRequest | None:
     try:
         # deal with command line using click module
         returned = cli(standalone_mode=False)
-
-        # if returned == 0:  # when user asks --help
-        #     return None
-        # else:
-        #     return returned
-        if type(returned) is tuple:
-            request, *param = returned
+        if returned == 0:  # user asked help
+            return None
         else:
-            # if the request has no parameter, give empty list as parameters
-            request, param = returned, list()
-        # transmit user request to the controller
-        return request, param
+            return returned
     except click.ClickException as exc:
-        exc.show()
+        exc.show()  # print click error explanation
         sys.exit(click.ClickException.exit_code)
-    except click.exceptions.Abort:  # ctrl-c
-        sys.exit(0)
+    except click.exceptions.Abort:  # quit at ctrl-c command
+        sys.exit()

@@ -1,41 +1,44 @@
 import click
 
-from view.requests import Request
+from view.requests import Request, FullRequest
 
 
 @click.group(name="employee")
-def cli_employee():
-    """Commands to manage employees"""
-    pass
+def cli_employee() -> None:
+    """Commands to manage employees."""
 
 
 @cli_employee.command(help="Add a new employee")
 @click.option("--fullname", prompt=True, prompt_required=True, type=str, help="Define the employee full name")
 @click.option("--username", prompt=True, prompt_required=True, type=str, help="Define the employee username")
-def add(username, fullname):
-    return Request.NEW_EMPLOYEE, username, fullname
+def add(**kwargs) -> FullRequest:
+    """Command to add a new employee."""
+    return FullRequest(Request.NEW_EMPLOYEE, **kwargs)
 
 
 @cli_employee.command(help="Delete an employee")
 @click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the employee")
-def delete(username):
-    return Request.DELETE_EMPLOYEE, username
+def delete(**kwargs) -> FullRequest:
+    """Command to delete an employee."""
+    return FullRequest(Request.DELETE_EMPLOYEE, **kwargs)
 
 
 @cli_employee.command(help="Set a new password")
 @click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the employee")
 @click.option("--password", prompt=True, hide_input=True, confirmation_prompt=True)
-def set_password(username, password):
-    return Request.SET_EMPLOYEE_PASSWORD, username, password
+def set_password(**kwargs) -> FullRequest:
+    """Command to set a new password."""
+    return FullRequest(Request.SET_EMPLOYEE_PASSWORD, **kwargs)
 
 
 @click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the employee")
 @click.option(
     "--role", prompt=True, prompt_required=True, default="NONE", type=str, help="Specify the role"
-)  # use choice ?
+)  # to-do : use choice ?
 @cli_employee.command(help="Set a new role")
-def set_role(username, role):
-    return Request.SET_EMPLOYEE_ROLE, username, role
+def set_role(**kwargs) -> FullRequest:
+    """Command to set a new role."""
+    return FullRequest(Request.SET_EMPLOYEE_ROLE, **kwargs)
 
 
 @cli_employee.command(help="Update employee data")
@@ -44,19 +47,22 @@ def set_role(username, role):
     "--fullname", default=None, prompt=False, prompt_required=False, type=str, help="Define the new full name"
 )
 @click.option("--username", default=None, prompt=False, prompt_required=True, type=str, help="Define the new username")
-def update(id, username, fullname):
-    return Request.UPDATE_EMPLOYEE, id, username, fullname
+def update(**kwargs) -> FullRequest:
+    """Command to update an employee data (fullname and username fields)."""
+    return FullRequest(Request.UPDATE_EMPLOYEE, **kwargs)
 
 
 @click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the employee")
-@cli_employee.command(help="Show employee detail")
-def detail(username):
-    return Request.DETAIL_EMPLOYEE, username
+@cli_employee.command(help="Show employee details")
+def detail(**kwargs) -> FullRequest:
+    """Command to show employee details."""
+    return FullRequest(Request.DETAIL_EMPLOYEE, **kwargs)
 
 
 @click.option(
     "--role-filter", type=click.Choice(["SUPPORT", "ADMINISTRATOR", "COMMERCIAL"], case_sensitive=False), default=None
 )
 @cli_employee.command(help="List existing employees")
-def list(role_filter):
-    return Request.LIST_EMPLOYEES, role_filter
+def list(**kwargs) -> FullRequest:
+    """Command to list existing employees."""
+    return FullRequest(Request.LIST_EMPLOYEES, **kwargs)

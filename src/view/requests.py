@@ -1,4 +1,5 @@
 from enum import Enum, auto
+from typing import Any
 
 
 class Request(Enum):
@@ -33,3 +34,12 @@ class Request(Enum):
     LIST_EVENTS = auto()
     SET_EVENT_SUPPORT = auto()
     UPDATE_EVENT = auto()
+
+
+class FullRequest:
+    request: Request
+    params: dict[str, Any]
+
+    def __init__(self, request: Request, **params: Any):
+        self.request = request
+        self.params = params

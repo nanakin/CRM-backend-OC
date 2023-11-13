@@ -29,7 +29,7 @@ class Contract(Base):
             f"total_amount={self.total_amount!r})"
         )
 
-    def as_printable_dict(self, full=True):
+    def as_printable_dict(self, full=True):  # to-do: deal with floating amounts
         commercial = self.customer.commercial_contact
         data = {
             "UUID": str(self.id).upper(),
@@ -112,7 +112,7 @@ class ContractModelMixin:
             session.commit()
             return contract.as_printable_dict()
 
-    def add_contract_payment(self, contract_uuid, paid_amount, authenticated_user):
+    def add_contract_payment(self, contract_uuid, paid_amount, authenticated_user):  # to-do: deal with floating amounts
         employee = self._get_employee(username=authenticated_user)  # store ID in controller self.authenticated_user ?
         contract = self._get_contract(contract_uuid)
         self.verify_contract_authorization(employee, contract)
