@@ -11,7 +11,7 @@ import toml
 
 from controller import Controller
 from model import Model
-from view import View
+from view.cli import View  # change to dynamic import if multiple views
 
 
 def log_record_setup() -> None:

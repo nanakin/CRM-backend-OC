@@ -1,7 +1,7 @@
 """Define the interface for all the views classes, these methods will be used by the controller."""
 from abc import ABC, abstractmethod
-from .requests import FullRequest
-from .log_status import LogStatus
+from view.requests import FullRequest
+from view.log import LogStatus
 
 
 class IView(ABC):

@@ -1,8 +1,7 @@
-from typing import Any
-
 from rich.prompt import Prompt
 
 from .console import console
+
 
 def ask_credentials():
     console.print("This action requires user authentication")

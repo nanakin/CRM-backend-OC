@@ -1,9 +1,9 @@
-from .cli_input import cli_main
-from .terminal_output.display import notification, display_panel, display_table
-from .terminal_output.input import ask_credentials
-from .requests import FullRequest
-from .interface import IView
-from .log import LogStatus
+from .commands import cli_main
+from .terminal.display import notification, display_panel, display_table
+from .terminal.input import ask_credentials
+from view.requests import FullRequest
+from view.interface import IView
+from view.log import LogStatus
 
 
 class View(IView):
