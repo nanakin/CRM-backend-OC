@@ -10,11 +10,10 @@ from .console import console
 def display_table(title: str, data: list[dict], colors: dict[str, str]):
     """Display a nice colored table with the given title and data."""
     title_color = colors.get("title")
-    table = Table(title=title, title_style=title_color, expand=True)
+    table = Table(title=title, title_style=title_color)
     if data:
         for column_n, key in enumerate(data[0].keys()):
             color = colors.get(key, "white")
-            print(f"{key=} {color=}")
             table.add_column(key, justify="left", style=color)
         for row in data:
             table.add_row(*row.values())

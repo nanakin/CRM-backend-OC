@@ -17,14 +17,14 @@ def add(**kwargs) -> FullRequest:
 
 
 @cli_contract.command(help="Sign contract")
-@click.option("--uuid", prompt=True, prompt_required=True, type=click.UUID, help="Specify the contract")
+@click.option("--contract-uuid", prompt=True, prompt_required=True, type=click.UUID, help="Specify the contract")
 def sign(**kwargs) -> FullRequest:
     """Command to sign a contract."""
     return FullRequest(Request.SIGN_CONTRACT, **kwargs)
 
 
 @cli_contract.command(help="Add a new payment")
-@click.option("--uuid", prompt=True, prompt_required=True, type=click.UUID, help="Specify the contract")
+@click.option("--contract-uuid", prompt=True, prompt_required=True, type=click.UUID, help="Specify the contract")
 @click.option("--payment", prompt=True, prompt_required=True, default=0, type=float, help="Specify the amount paid")
 def add_payment(**kwargs) -> FullRequest:
     """Command to add a new payment to a contract."""
@@ -32,7 +32,7 @@ def add_payment(**kwargs) -> FullRequest:
 
 
 @cli_contract.command(help="Update contract amount")
-@click.argument("uuid", type=click.UUID)
+@click.argument("contract-uuid", type=click.UUID)
 @click.option(
     "--total-amount", default=None, prompt=False, prompt_required=False, type=float, help="Define the new total amount"
 )
@@ -46,7 +46,7 @@ def update(**kwargs) -> FullRequest:
 
 
 @cli_contract.command(help="Show contract details")
-@click.option("--uuid", prompt=True, prompt_required=True, type=click.UUID, help="Specify the contract")
+@click.option("--contract-uuid", prompt=True, prompt_required=True, type=click.UUID, help="Specify the contract")
 def detail(**kwargs) -> FullRequest:
     """Command to show a contract details."""
     return FullRequest(Request.DETAIL_CONTRACT, **kwargs)

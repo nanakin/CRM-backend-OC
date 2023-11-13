@@ -19,7 +19,7 @@ def add(**kwargs) -> FullRequest:
 
 
 @cli_event.command(help="Set a new support contact")
-@click.option("--id", prompt=True, prompt_required=True, type=int, help="Specify the event")
+@click.option("--event-id", prompt=True, prompt_required=True, type=int, help="Specify the event")
 @click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the support")
 def set_support(**kwargs) -> FullRequest:
     """Command to set a new support contact."""
@@ -27,7 +27,7 @@ def set_support(**kwargs) -> FullRequest:
 
 
 @cli_event.command(help="Update event data")
-@click.argument("id", type=int)
+@click.argument("event-id", type=int)
 @click.option("--name", default=None, prompt=False, prompt_required=False, type=str, help="Define a new name")
 @click.option(
     "--start", default=None, prompt=False, prompt_required=False, type=click.DateTime(), help="Define the start time"
@@ -47,7 +47,7 @@ def update(**kwargs) -> FullRequest:
 
 
 @cli_event.command(help="Show event detail")
-@click.option("--id", prompt=True, prompt_required=True, type=int, help="Specify the event")
+@click.option("--event-id", prompt=True, prompt_required=True, type=int, help="Specify the event")
 def detail(**kwargs) -> FullRequest:
     """Command to show event details."""
     return FullRequest(Request.DETAIL_EVENT, **kwargs)

@@ -42,7 +42,7 @@ def set_role(**kwargs) -> FullRequest:
 
 
 @cli_employee.command(help="Update employee data")
-@click.argument("id", type=int)
+@click.argument("employee-id", type=int)
 @click.option(
     "--fullname", default=None, prompt=False, prompt_required=False, type=str, help="Define the new full name"
 )
