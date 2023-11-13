@@ -30,32 +30,25 @@ class Event(Base):
     def __repr__(self) -> str:
         return f"Event(id={self.id!r}, name={self.name!r}, contract_id={self.contract_id!r})"
 
-    def as_printable_dict(self):
+    def as_printable_dict(self, full=True):
+        customer = self.contract.customer
         commercial = self.contract.customer.commercial_contact
         support = self.support_contact
-        return {
+        data = {
             "ID": str(self.id),
             "Name": self.name.capitalize(),
             "Contract": str(self.contract),
+            "Customer": str(customer),
             "Support": str(support) if support else "None",
             "Commercial": str(commercial) if commercial else "None",
-            "Start": str(self.start),
-            "End": str(self.end),
-            "Attendees": str(self.attendees),
-            "Location": str(self.location),
-            "Note": str(self.note),
-        }
-
-    def as_printable_tuple(self):
-        printable = self.as_printable_dict()
-        return (
-            printable["ID"],
-            printable["Name"],
-            printable["Contract"],
-            printable["Support"],
-            printable["Commercial"],
-            printable["Start"],
-        )
+            "Start": str(self.start)}
+        if full:
+            data.update({
+                "End": str(self.end),
+                "Attendees": str(self.attendees),
+                "Location": str(self.location),
+                "Note": str(self.note)})
+        return data
 
 
 class EventModelMixin:
@@ -83,7 +76,7 @@ class EventModelMixin:
                 result = session.query(Event)
             else:
                 result = session.query(Event).filter()
-            return [row.as_printable_tuple() for row in result]
+            return [row.as_printable_dict(full=False) for row in result]
 
     def detail_event(self, event_id):
         event = self._get_event(event_id)

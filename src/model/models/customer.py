@@ -34,21 +34,19 @@ class Customer(Base):
             f"creation_date={self.creation_date!r}, last_modified={self.last_modified!r})"
         )
 
-    def as_printable_dict(self):
-        return {
+    def as_printable_dict(self, full=False):
+        data = {
             "ID": str(self.id),
             "Full name": self.fullname,
             "Company": self.company,
-            "Commercial": str(self.commercial_contact),
-            "Email": str(self.email),
-            "Phone": str(self.phone),
-            "Creation date": str(self.creation_date),
-            "Last modification": str(self.last_modified),
-        }
-
-    def as_printable_tuple(self):
-        printable = self.as_printable_dict()
-        return printable["ID"], printable["Full name"], printable["Company"], printable["Commercial"]
+            "Commercial": str(self.commercial_contact)}
+        if full:
+            data.update({
+                "Email": str(self.email),
+                "Phone": str(self.phone),
+                "Creation date": str(self.creation_date),
+                "Last modification": str(self.last_modified)})
+        return data
 
 
 class CustomerModelMixin:
@@ -64,7 +62,7 @@ class CustomerModelMixin:
     def get_customers(self):
         with self.Session() as session:
             result = session.query(Customer).order_by(Customer.fullname)
-            return [row.as_printable_tuple() for row in result]
+            return [row.as_printable_dict(full=False) for row in result]
 
     def detail_customer(self, id):
         customer = self._get_customer(id)

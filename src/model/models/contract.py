@@ -29,19 +29,19 @@ class Contract(Base):
             f"total_amount={self.total_amount!r})"
         )
 
-    def as_printable_dict(self):
-        return {
+    def as_printable_dict(self, full=True):
+        commercial = self.customer.commercial_contact
+        data = {
             "UUID": str(self.id).upper(),
             "Customer": str(self.customer),
+            "Commercial": str(commercial),
             "Signed": str(self.signed),
-            "Total amount": str(self.total_amount) + " €",
-            "Total due": str(self.total_amount - self.total_payed) + " €",
-            "Creation date": str(self.creation_date),
-        }
-
-    def as_printable_tuple(self):
-        printable = self.as_printable_dict()
-        return printable["UUID"], printable["Customer"], printable["Signed"], printable["Total due"]
+            "Total due": str(self.total_amount - self.total_payed) + " €"}
+        if full:
+            data.update({
+                "Total amount": str(self.total_amount) + " €",
+                "Creation date": str(self.creation_date)})
+        return data
 
 
 class ContractModelMixin:
@@ -76,7 +76,7 @@ class ContractModelMixin:
                     result = session.query(Contract).filter(
                         Contract.signed == False, Contract.total_payed < Contract.total_amount  # noqa: E712
                     )
-            return [row.as_printable_tuple() for row in result]
+            return [row.as_printable_dict(full=False) for row in result]
 
     def detail_contract(self, contract_uuid):
         contract = self._get_contract(contract_uuid)

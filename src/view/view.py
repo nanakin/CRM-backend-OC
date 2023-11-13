@@ -1,44 +1,58 @@
 from .cli_input import cli_main
-from .terminal_output.contracts import display_contract, display_contracts
-from .terminal_output.customers import display_customer, display_customers
-from .terminal_output.display import notification
-from .terminal_output.employees import ask_credentials, display_employee, display_employees
-from .terminal_output.events import display_event, display_events
+from .terminal_output.display import notification, display_panel, display_table
+from .terminal_output.input import ask_credentials
 
 
 class View:
-    def notification(self, status, message):
+
+    colors = {"Support": "green", "Commercial": "light_goldenrod2", "Customer": "dark_orange",
+              "Contract": "yellow", "Event": "pink1", "Employee": "cyan", "ID": "bright_white"}
+
+    @staticmethod
+    def notification(status, message):
         notification(status, message)
 
-    def ask_credentials(self):
+    @staticmethod
+    def ask_credentials():
         return ask_credentials()
 
-    def read_user_input(self):
+    @staticmethod
+    def read_user_input():
         return cli_main()
 
-    def display_employees(self, employees):
-        display_employees(employees)
+    @staticmethod
+    def display_employees(data: list[dict] | dict, focus: list | None = None):
+        colors = {"title": View.colors["Employee"], "Full name": View.colors["Employee"], **View.colors}
+        if isinstance(data, list):
+            display_table(title="Employees 👷 ", data=data, colors=colors)
+        else:
+            display_panel(title="Employee 👷 ", data=data, subtitle=data["Full name"], focus=focus, colors=colors)
 
-    def display_employee(self, employee, focus=None):
-        display_employee(employee, focus)
 
-    def display_customers(self, customers):
-        display_customers(customers)
+    @staticmethod
+    def display_customers(data: list[dict] | dict, focus: list | None = None):
+        colors = {"title": View.colors["Customer"], "Full name": View.colors["Customer"], **View.colors}
+        if isinstance(data, list):
+            display_table(title="Customers 🏭 ", data=data, colors=colors)
+        else:
+            display_panel(title="Customer 🏭 ", data=data, subtitle=data["Full name"],
+                          focus=focus, colors=colors)
 
-    def display_customer(self, customer, focus=None):
-        display_customer(customer, focus)
+    @staticmethod
+    def display_contracts(data: list[dict] | dict, focus: list | None = None):
+        colors = {"title": View.colors["Contract"], "UUID": View.colors["Contract"], **View.colors}
+        if isinstance(data, list):
+            display_table(title="Contracts 📃 ", data=data, colors=colors)
+        else:
+            display_panel(title="Contract 📃 ", data=data, subtitle=data["UUID"], focus=focus, colors=colors)
 
-    def display_contracts(self, contracts):
-        display_contracts(contracts)
-
-    def display_contract(self, contract, focus=None):
-        display_contract(contract, focus)
-
-    def display_events(self, events):
-        display_events(events)
-
-    def display_event(self, event, focus=None):
-        display_event(event, focus)
+    @staticmethod
+    def display_events(data: list[dict] | dict, focus: list | None = None):
+        colors = {"title": View.colors["Event"], "Name": View.colors["Event"], **View.colors}
+        if isinstance(data, list):
+            display_table(title="Events 🎪 ", data=data, colors=colors)
+        else:
+            display_panel(title="Event 🎪 ", data=data, subtitle=data["Name"], focus=focus, colors=colors)
 
     def __init__(self):
         pass

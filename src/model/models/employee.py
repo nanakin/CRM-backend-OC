@@ -39,10 +39,6 @@ class Employee(Base):
     def as_printable_dict(self):
         return {"ID": str(self.id), "Full name": self.fullname, "Username": self.username, "Role": str(self.role)}
 
-    def as_printable_tuple(self):
-        printable = self.as_printable_dict()
-        return printable["ID"], printable["Full name"], printable["Username"], printable["Role"]
-
 
 class EmployeeModelMixin:
     def get_employees(self, role_filter_value=None):
@@ -52,7 +48,7 @@ class EmployeeModelMixin:
                 result = session.query(Employee).filter_by(role_id=role_id).order_by(Employee.fullname)
             else:
                 result = session.query(Employee).order_by(Employee.fullname)
-            return [row.as_printable_tuple() for row in result]
+            return [row.as_printable_dict() for row in result]
 
     def add_employee(self, username, fullname):
         generated_password = "".join(random.choices(string.ascii_lowercase, k=12))
