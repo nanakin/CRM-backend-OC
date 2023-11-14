@@ -13,16 +13,18 @@ def cli() -> int | FullRequest:
     """CRM application allows employees, customers, contracts and events management."""
 
 
+cli.add_command(cli_employee)
+cli.add_command(cli_customer)
+cli.add_command(cli_authentication)
+cli.add_command(cli_contract)
+cli.add_command(cli_event)
+
+
 def cli_main() -> FullRequest | None:
     """Deal with CLI.
 
     Returns understandable requests to the controller."""
 
-    cli.add_command(cli_employee)
-    cli.add_command(cli_customer)
-    cli.add_command(cli_authentication)
-    cli.add_command(cli_contract)
-    cli.add_command(cli_event)
     try:
         # deal with command line using click module
         returned = cli(standalone_mode=False)
