@@ -4,7 +4,7 @@ from view.requests import Request, FullRequest
 
 
 @click.group(name="auth")
-def cli_authentication() -> None:
+def cli_authentication():
     """Commands to manage authentication."""
 
 

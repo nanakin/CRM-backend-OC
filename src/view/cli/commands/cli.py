@@ -9,7 +9,7 @@ from view.requests import FullRequest
 
 
 @click.group()
-def cli() -> None:
+def cli() -> int | FullRequest:
     """CRM application allows employees, customers, contracts and events management."""
 
 

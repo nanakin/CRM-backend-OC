@@ -4,7 +4,7 @@ from view.requests import Request, FullRequest
 
 
 @click.group(name="customer")
-def cli_customer() -> None:
+def cli_customer():
     """Commands to manage customers."""
 
 
@@ -46,7 +46,7 @@ def detail(**kwargs) -> FullRequest:
     return FullRequest(Request.DETAIL_CUSTOMER, **kwargs)
 
 
-@cli_customer.command(help="List existing customers")
-def list() -> FullRequest:
+@cli_customer.command(help="List existing customers", name="list")
+def listing() -> FullRequest:
     """Command to list existing customers."""
     return FullRequest(Request.LIST_CUSTOMERS)

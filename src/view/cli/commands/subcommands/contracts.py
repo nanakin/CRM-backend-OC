@@ -4,7 +4,7 @@ from view.requests import Request, FullRequest
 
 
 @click.group(name="contract")
-def cli_contract() -> None:
+def cli_contract():
     """Commands to manage contracts."""
 
 
@@ -52,9 +52,9 @@ def detail(**kwargs) -> FullRequest:
     return FullRequest(Request.DETAIL_CONTRACT, **kwargs)
 
 
-@cli_contract.command(help="List existing contracts")
+@cli_contract.command(help="List existing contracts", name="list")
 @click.option("--not-signed-filter", is_flag=True, default=False, help="Display not signed contracts only")
 @click.option("--not-paid-filter", is_flag=True, default=False, help="Display not paid contracts only")
-def list(**kwargs) -> FullRequest:
+def listing(**kwargs) -> FullRequest:
     """Command to list existing contracts."""
     return FullRequest(Request.LIST_CONTRACTS, **kwargs)

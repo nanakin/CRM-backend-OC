@@ -4,7 +4,7 @@ from view.requests import Request, FullRequest
 
 
 @click.group(name="employee")
-def cli_employee() -> None:
+def cli_employee():
     """Commands to manage employees."""
 
 
@@ -31,11 +31,11 @@ def set_password(**kwargs) -> FullRequest:
     return FullRequest(Request.SET_EMPLOYEE_PASSWORD, **kwargs)
 
 
+@cli_employee.command(help="Set a new role")
 @click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the employee")
 @click.option(
     "--role", prompt=True, prompt_required=True, default="NONE", type=str, help="Specify the role"
 )  # to-do : use choice ?
-@cli_employee.command(help="Set a new role")
 def set_role(**kwargs) -> FullRequest:
     """Command to set a new role."""
     return FullRequest(Request.SET_EMPLOYEE_ROLE, **kwargs)
@@ -52,17 +52,17 @@ def update(**kwargs) -> FullRequest:
     return FullRequest(Request.UPDATE_EMPLOYEE, **kwargs)
 
 
-@click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the employee")
 @cli_employee.command(help="Show employee details")
+@click.option("--username", prompt=True, prompt_required=True, type=str, help="Specify the employee")
 def detail(**kwargs) -> FullRequest:
     """Command to show employee details."""
     return FullRequest(Request.DETAIL_EMPLOYEE, **kwargs)
 
 
+@cli_employee.command(help="List existing employees", name="list")
 @click.option(
     "--role-filter", type=click.Choice(["SUPPORT", "ADMINISTRATOR", "COMMERCIAL"], case_sensitive=False), default=None
 )
-@cli_employee.command(help="List existing employees")
-def list(**kwargs) -> FullRequest:
+def listing(**kwargs) -> FullRequest:
     """Command to list existing employees."""
     return FullRequest(Request.LIST_EMPLOYEES, **kwargs)

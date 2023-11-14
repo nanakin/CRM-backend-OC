@@ -4,7 +4,7 @@ from view.requests import Request, FullRequest
 
 
 @click.group(name="event")
-def cli_event() -> None:
+def cli_event():
     """Commands to manage events."""
 
 
