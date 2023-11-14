@@ -3,6 +3,7 @@ from enum import Flag, auto
 from model import OperationFailed
 from view.log import LogStatus
 from view.requests import Request  # noqa
+from functools import wraps
 
 
 # create enum from DB values ?
@@ -29,6 +30,7 @@ class RequestsMapping:
                 )  # print user full name
 
         def wrap(func):
+            @wraps(func)  # preserve original signature of the decorated function
             def notif_and_authenticate_wrap(controller, *args, **kwargs):
                 def decorated_func(*args, **kwargs):
                     if required_role is not None:
@@ -47,6 +49,7 @@ class RequestsMapping:
                 return decorated_func(controller, *args, **kwargs)
 
             self.allowed[request] = notif_and_authenticate_wrap
+            return notif_and_authenticate_wrap
 
         return wrap
 
