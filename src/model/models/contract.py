@@ -45,7 +45,8 @@ class Contract(Base):
 
 
 class ContractModelMixin:
-    def verify_contract_authorization(self, connected_employee, contract):
+    def verify_contract_authorization(self, connected_employee_id, contract):
+        connected_employee = self.get_employee(id=connected_employee_id)
         if connected_employee.role.name.upper() == self.roles.COMMERCIAL.name.upper():  # to change
             if contract.customer.commercial_contact != connected_employee:
                 raise OperationFailed(
@@ -89,20 +90,18 @@ class ContractModelMixin:
             session.commit()
             return contract.as_printable_dict()
 
-    def sign_contract(self, contract_uuid, authenticated_user):
-        employee = self._get_employee(username=authenticated_user)  # store ID in controller self.authenticated_user ?
+    def sign_contract(self, contract_uuid, employee_id):
         contract = self._get_contract(contract_uuid)
-        self.verify_contract_authorization(employee, contract)
+        self.verify_contract_authorization(employee_id, contract)
         with self.Session() as session:
             contract.signed = True
             session.add(contract)
             session.commit()
             return contract.as_printable_dict()
 
-    def update_contract(self, contract_uuid, customer_id, total_amount, authenticated_user):
-        employee = self._get_employee(username=authenticated_user)  # store ID in controller self.authenticated_user ?
+    def update_contract(self, contract_uuid, customer_id, total_amount, employee_id):
         contract = self._get_contract(contract_uuid)
-        self.verify_contract_authorization(employee, contract)
+        self.verify_contract_authorization(employee_id, contract)
         with self.Session() as session:
             if total_amount:
                 contract.total_amount = total_amount
@@ -112,10 +111,9 @@ class ContractModelMixin:
             session.commit()
             return contract.as_printable_dict()
 
-    def add_contract_payment(self, contract_uuid, paid_amount, authenticated_user):  # to-do: deal with floating amounts
-        employee = self._get_employee(username=authenticated_user)  # store ID in controller self.authenticated_user ?
+    def add_contract_payment(self, contract_uuid, paid_amount, employee_id):  # to-do: deal with floating amounts
         contract = self._get_contract(contract_uuid)
-        self.verify_contract_authorization(employee, contract)
+        self.verify_contract_authorization(employee_id, contract)
         with self.Session() as session:
             contract.total_payed = contract.total_payed + paid_amount
             session.add(contract)

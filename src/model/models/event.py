@@ -82,8 +82,8 @@ class EventModelMixin:
         event = self._get_event(event_id)
         return event.as_printable_dict()
 
-    def add_event(self, contract_uuid, name, authenticated_user):
-        connected_employee = self._get_employee(authenticated_user)
+    def add_event(self, contract_uuid, name, employee_id):
+        connected_employee = self.get_employee(id=employee_id)
         contract = self._get_contract(contract_uuid)
         if not contract.signed:
             raise OperationFailed(f"Impossible to create an event for the unsigned contrat {contract_uuid}.")
@@ -99,7 +99,7 @@ class EventModelMixin:
             return event.as_printable_dict()
 
     def set_event_support(self, event_id, support_username):
-        support = self._get_employee(username=support_username)
+        support = self.get_employee(username=support_username)
         if support.role.name.upper() != self.roles.SUPPORT.name.upper():  # temp
             raise OperationFailed(
                 f"The employee {support} assigned to support the event is not a support ({support.role})."
@@ -113,10 +113,8 @@ class EventModelMixin:
             session.commit()
             return event.as_printable_dict()
 
-    def update_event(self, event_id, name, start, end, attendees, location, note, authenticated_user):
-        connected_employee = self._get_employee(
-            username=authenticated_user
-        )  # store ID in controller self.authenticated_user ?
+    def update_event(self, event_id, name, start, end, attendees, location, note, employee_id):
+        connected_employee = self.get_employee(id=employee_id)
         event = self._get_event(event_id)
         if event.support_contact_id != connected_employee.id:
             raise OperationFailed(

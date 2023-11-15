@@ -50,13 +50,13 @@ class Customer(Base):
 
 
 class CustomerModelMixin:
-    def _get_customer(self, id=None, missing_ok=False):
+    def _get_customer(self, customer_id=None, missing_ok=False):
         result = None
         with self.Session() as session:
-            result = session.query(Customer).filter_by(id=id).one_or_none()
+            result = session.query(Customer).filter_by(id=customer_id).one_or_none()
             session.commit()  # necessary ?
         if not missing_ok and result is None:
-            raise OperationFailed(f"Cannot find the customer with id {id}")
+            raise OperationFailed(f"Cannot find the customer with id {customer_id}")
         return result
 
     def get_customers(self):
@@ -64,16 +64,16 @@ class CustomerModelMixin:
             result = session.query(Customer).order_by(Customer.fullname)
             return [row.as_printable_dict(full=False) for row in result]
 
-    def detail_customer(self, id):
-        customer = self._get_customer(id)
+    def detail_customer(self, customer_id):
+        customer = self._get_customer(customer_id)
         return customer.as_printable_dict()
 
-    def add_customer(self, fullname, company, email, phone, commercial_username):
-        employee = self._get_employee(username=commercial_username)  # store ID in controller self.authenticated_user ?
+    def add_customer(self, fullname, company, email, phone, employee_id):
+        connected_employee = self.get_employee(id=employee_id)
         try:
             with self.Session() as session:
                 customer = Customer(
-                    fullname=fullname, email=email, phone=phone, company=company, commercial_contact_id=employee.id
+                    fullname=fullname, email=email, phone=phone, company=company, commercial_contact_id=connected_employee.id
                 )
                 session.add(customer)
                 session.commit()
@@ -81,17 +81,15 @@ class CustomerModelMixin:
         except PhoneNumberParseException:
             raise OperationFailed(f"Invalid phone number format ({phone})")
 
-    def update_customer_data(self, id, fullname, company, email, phone, commercial_contact_filter):
-        employee = self._get_employee(
-            username=commercial_contact_filter
-        )  # store ID in controller self.authenticated_user ?
+    def update_customer_data(self, id, fullname, company, email, phone, employee_id):
+        connected_employee = self.get_employee(id=employee_id)
         with self.Session() as session:
             customer = (
                 session.query(Customer).filter_by(id=id).one_or_none()
             )  # replace by the call to _get_customer to raise not found
-            if customer.commercial_contact_id != employee.id:
+            if customer.commercial_contact_id != connected_employee.id:
                 raise OperationFailed(
-                    f"The employee {employee.fullname} does not have the permission to edit the customer "
+                    f"The employee {connected_employee.fullname} does not have the permission to edit the customer "
                     f"{customer.fullname}."
                 )
             if fullname:
@@ -108,7 +106,7 @@ class CustomerModelMixin:
             return customer.as_printable_dict()
 
     def set_customer_commercial(self, id, commercial_username):
-        commercial = self._get_employee(username=commercial_username)
+        commercial = self.get_employee(username=commercial_username)
         if commercial.role.name.upper() != self.roles.COMMERCIAL.name.upper():  # temp
             raise OperationFailed(
                 f"The employee {commercial} assigned as commercial is not a commercial ({commercial.role})."

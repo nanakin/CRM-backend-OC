@@ -1,31 +1,44 @@
-from collections import namedtuple
-
+from typing import TYPE_CHECKING
 # import jwt
 from pathlib import Path
 
 from .common import OperationFailed, Request, Roles, requests_map
 
+if TYPE_CHECKING:
+    from model import Model
+    from view import View
+    from .common import Auth
+
+
 AUTH_FILENAME = Path(".auth")
-User = namedtuple("User", "username role")
 
 
 class AuthenticationControllerMixin:
+
+    view: "View"
+    model: "Model"
+    auth: "Auth"
+
     def _get_token(self):
+
         return self._load_from_persistent()
 
     def _set_authenticated_user(self, username):
-        role_name = self.model.get_role(username)
-        self.authenticated_user = User(username, Roles[role_name])
+        employee_as_dict = self.model.detail_employee(username)
+        self.auth.identify_as(employee_as_dict["Username"],
+                              employee_as_dict["ID"],
+                              employee_as_dict["Full name"],
+                              Roles[employee_as_dict["Role"].upper()])
 
     def _token_authentication(self):
         username = self._get_token()
         if username:
             self._set_authenticated_user(username)
-        return bool(self.authenticated_user)
+        return self.auth.is_authenticated
 
     def _persistent_save(self):
         with open(AUTH_FILENAME, "w", encoding="utf-8") as f:
-            f.write(self.authenticated_user.username)  # temp
+            f.write(self.auth.user.username)  # temp
 
     @staticmethod
     def _load_from_persistent():
@@ -49,7 +62,7 @@ class AuthenticationControllerMixin:
         if not self._token_authentication():
             username, password = self.view.ask_credentials()
             self._login_with_password(username, password)
-        return self.authenticated_user
+        return self.auth
 
     # -------------------- CRM Commands below --------------------------
 
