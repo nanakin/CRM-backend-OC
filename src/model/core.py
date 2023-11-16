@@ -17,20 +17,14 @@ from .models import (
     Role,
 )
 
-DEFAULT_DB = "sqlite://"
-
-
-def db_list_entries(engine):
-    with Session(engine) as session:
-        to_list = [Role, Employee, Customer, Contract, Event]
-        for table in to_list:
-            items = session.query(table).all()
-            for item in items:
-                print(item)
+DEFAULT_DB = "sqlite://"  # in-memory SQLite database
 
 
 class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventModelMixin):
+    """Model class to manage database operations."""
+
     def get_roles(self):
+        """Retrieve roles from the database and return an Enum to facilitate permissions management."""
         with self.Session() as session:
             roles = session.query(Role).all()
         dict_roles = {}
@@ -38,18 +32,19 @@ class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventMod
             dict_roles[role.name.upper()] = role.id
         return Enum("EnumRoles", dict_roles)
 
-    def __init__(self, url=DEFAULT_DB, echo=False, reset=False) -> None:
-        self.engine = create_engine(url, echo=echo)
-        self.Session = sessionmaker(self.engine, expire_on_commit=False)
-        self.roles = None
+    def __init__(self, url: str = DEFAULT_DB, echo: bool = False, reset: bool = False) -> None:
+        """Initialize the database and create tables if necessary."""
+        engine = create_engine(url, echo=echo)
+        self.Session = sessionmaker(engine, expire_on_commit=False)
         if reset:
-            drop_database(self.engine.url)
+            drop_database(engine.url)
         if not database_exists(url):
-            Base.metadata.create_all(self.engine)
+            Base.metadata.create_all(engine)
         else:
             self.roles = self.get_roles()
 
     def populate_with_sample(self):  # possibility to move this method
+        """Populate the database with sample data."""
         from .model_sample.populate import populate
 
         populate(self.Session)

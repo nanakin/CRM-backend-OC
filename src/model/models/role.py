@@ -3,10 +3,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from .common import Base
 
-# from typing import List
-
 
 class Role(Base):
+    """Role database model."""
     __tablename__ = "role"
 
     id: Mapped[int] = mapped_column(primary_key=True)

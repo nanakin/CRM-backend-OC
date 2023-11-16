@@ -38,9 +38,9 @@ class EventsControllerMixin:
         self.view.display_event(displayable_event, focus=displayable_event.keys())
 
     @requests_map.register(Request.SET_EVENT_SUPPORT, required_role=Roles.ADMINISTRATOR)
-    def set_event_support(self, event_id: int, support_username: str) -> None:
+    def set_event_support(self, event_id: int, username: str) -> None:
         """Update the support associated to event in database and display the event."""
-        displayable_event = self.model.set_event_support(event_id, support_username)
+        displayable_event = self.model.set_event_support(event_id, username)
         self.view.display_event(displayable_event, focus=["Support"])
 
     @requests_map.register(Request.UPDATE_EVENT, required_role=Roles.SUPPORT)

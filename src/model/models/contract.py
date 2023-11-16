@@ -1,8 +1,9 @@
 from datetime import datetime
-from uuid import uuid4
+from uuid import uuid4, UUID
+from typing import Optional
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, sessionmaker
 from sqlalchemy.sql import func
 from sqlalchemy.types import Uuid
 
@@ -10,6 +11,7 @@ from .common import Base, OperationFailed
 
 
 class Contract(Base):
+    """Contract database model."""
     __tablename__ = "contract"
 
     id: Mapped[Uuid] = mapped_column(Uuid, primary_key=True, default=uuid4)
@@ -29,7 +31,8 @@ class Contract(Base):
             f"total_amount={self.total_amount!r})"
         )
 
-    def as_printable_dict(self, full=True):  # to-do: deal with floating amounts
+    def as_dict(self, full: bool = True) -> dict:  # to-do: deal with floating amounts
+        """Abstraction of the contract database model object with a dictionary."""
         commercial = self.customer.commercial_contact
         data = {
             "UUID": str(self.id).upper(),
@@ -45,8 +48,25 @@ class Contract(Base):
 
 
 class ContractModelMixin:
-    def verify_contract_authorization(self, connected_employee_id, contract):
-        connected_employee = self.get_employee(id=connected_employee_id)
+    """Model Mixin to manage contracts data."""
+
+    Session: sessionmaker
+    #roles:
+
+    def get_contract(self, contract_uuid: UUID) -> Contract:
+        """Retrieve a contract from database (raises an exception or return None if missing).
+
+        Model usage only."""
+        with self.Session() as session:
+            result = session.query(Contract).filter_by(id=contract_uuid).one_or_none()
+            session.commit()  # necessary ?
+            if result is None:
+                raise OperationFailed(f"Cannot find the contract with uuid {contract_uuid}")
+            return result
+
+    def verify_contract_authorization(self, connected_employee_id: int, contract: Contract) -> None:
+        """Raises an exception if the employee doesn't have the authorization to edit the contract."""
+        connected_employee = self.get_employee(employee_id=connected_employee_id)
         if connected_employee.role.name.upper() == self.roles.COMMERCIAL.name.upper():  # to change
             if contract.customer.commercial_contact != connected_employee:
                 raise OperationFailed(
@@ -55,16 +75,8 @@ class ContractModelMixin:
                     f"{contract.customer.commercial_contact.fullname})"
                 )
 
-    def _get_contract(self, contract_uuid=None, missing_ok=False):
-        result = None
-        with self.Session() as session:
-            result = session.query(Contract).filter_by(id=contract_uuid).one_or_none()
-            session.commit()  # necessary ?
-        if not missing_ok and result is None:
-            raise OperationFailed(f"Cannot find the contract with uuid {contract_uuid}")
-        return result
-
-    def get_contracts(self, not_signed_filter, not_paid_filter):
+    def get_contracts(self, not_signed_filter: bool, not_paid_filter: bool) -> list[dict]:
+        """Retrieve contracts from database and return them as a list of dictionaries."""
         with self.Session() as session:
             if not not_paid_filter and not not_signed_filter:
                 result = session.query(Contract)
@@ -77,30 +89,34 @@ class ContractModelMixin:
                     result = session.query(Contract).filter(
                         Contract.signed == False, Contract.total_payed < Contract.total_amount  # noqa: E712
                     )
-            return [row.as_printable_dict(full=False) for row in result]
+            return [row.as_dict(full=False) for row in result]
 
-    def detail_contract(self, contract_uuid):
-        contract = self._get_contract(contract_uuid)
-        return contract.as_printable_dict()
+    def detail_contract(self, contract_uuid: UUID) -> dict:
+        """Retrieve a given contract from database (and return it as dictionary)."""
+        contract = self.get_contract(contract_uuid)
+        return contract.as_dict()
 
-    def add_contract(self, customer_id, total_amount):
+    def add_contract(self, customer_id: int, total_amount: float) -> dict:  # to-do: deal with floating amounts
+        """Add a new contract to database (and return it as dictionary)."""
         with self.Session() as session:
             contract = Contract(customer_id=customer_id, total_amount=total_amount)
             session.add(contract)
             session.commit()
-            return contract.as_printable_dict()
+            return contract.as_dict()
 
-    def sign_contract(self, contract_uuid, employee_id):
-        contract = self._get_contract(contract_uuid)
+    def sign_contract(self, contract_uuid: UUID, employee_id: int) -> dict:
+        """Update contract signed status in database (and return the contract as dictionary)."""
+        contract = self.get_contract(contract_uuid)
         self.verify_contract_authorization(employee_id, contract)
         with self.Session() as session:
             contract.signed = True
             session.add(contract)
             session.commit()
-            return contract.as_printable_dict()
+            return contract.as_dict()
 
-    def update_contract(self, contract_uuid, customer_id, total_amount, employee_id):
-        contract = self._get_contract(contract_uuid)
+    def update_contract(self, contract_uuid: UUID, customer_id: Optional[int], total_amount: Optional[float], employee_id: int) -> dict:
+        """Update contract fields in database (and return the contract as dictionary)."""
+        contract = self.get_contract(contract_uuid)
         self.verify_contract_authorization(employee_id, contract)
         with self.Session() as session:
             if total_amount:
@@ -109,13 +125,14 @@ class ContractModelMixin:
                 contract.customer_id = customer_id
             session.add(contract)
             session.commit()
-            return contract.as_printable_dict()
+            return contract.as_dict()
 
-    def add_contract_payment(self, contract_uuid, paid_amount, employee_id):  # to-do: deal with floating amounts
-        contract = self._get_contract(contract_uuid)
+    def add_contract_payment(self, contract_uuid: UUID, paid_amount: float, employee_id: int) -> dict:   # to-do: deal with floating amounts
+        """Save a new contract payment into database (and return the contract as dictionary)."""
+        contract = self.get_contract(contract_uuid)
         self.verify_contract_authorization(employee_id, contract)
         with self.Session() as session:
             contract.total_payed = contract.total_payed + paid_amount
             session.add(contract)
             session.commit()
-            return contract.as_printable_dict()
+            return contract.as_dict()

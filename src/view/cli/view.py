@@ -4,9 +4,11 @@ from .terminal.input import ask_credentials
 from view.requests import FullRequest
 from view.interface import IView
 from view.log import LogStatus
+from typing import Optional
 
 
 class View(IView):
+    """Methods to display or to interacts with the user."""
 
     colors = {"Support": "green", "Commercial": "light_goldenrod2", "Customer": "dark_orange",
               "Contract": "yellow", "Event": "pink1", "Employee": "cyan", "ID": "bright_white"}
@@ -17,14 +19,14 @@ class View(IView):
     def ask_credentials(self) -> tuple[str, str]:
         return ask_credentials()
 
-    def read_user_input(self) -> FullRequest | None:
+    def read_user_input(self) -> Optional[FullRequest]:
         return cli_main()
 
     def display_employees(self, data: list[dict]):
         colors = {"title": View.colors["Employee"], "Full name": View.colors["Employee"], **View.colors}
         display_table(title="Employees 👷 ", data=data, colors=colors)
 
-    def display_employee(self, data: dict, focus: list | None = None):
+    def display_employee(self, data: dict, focus: Optional[list] = None):
         colors = {"title": View.colors["Employee"]}
         display_panel(title="Employee 👷 ", data=data, subtitle=data["Full name"], focus=focus, colors=colors)
 

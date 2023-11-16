@@ -1,7 +1,7 @@
 from datetime import datetime
-
+from typing import Optional
 from sqlalchemy import DateTime, ForeignKey, Unicode
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, sessionmaker
 from sqlalchemy.sql import func
 from sqlalchemy_utils import EmailType, PhoneNumberType
 from sqlalchemy_utils.types.phone_number import PhoneNumberParseException
@@ -10,6 +10,7 @@ from .common import Base, OperationFailed
 
 
 class Customer(Base):
+    """Customer database model."""
     __tablename__ = "customer"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -34,7 +35,8 @@ class Customer(Base):
             f"creation_date={self.creation_date!r}, last_modified={self.last_modified!r})"
         )
 
-    def as_printable_dict(self, full=False):
+    def as_dict(self, full: bool = False) -> dict:
+        """Abstraction of customer database model object with a dictionary."""
         data = {
             "ID": str(self.id),
             "Full name": self.fullname,
@@ -50,25 +52,34 @@ class Customer(Base):
 
 
 class CustomerModelMixin:
-    def _get_customer(self, customer_id=None, missing_ok=False):
-        result = None
+    """Model Mixin to manage customers data."""
+
+    Session: sessionmaker
+
+    def get_customer(self, customer_id: int) -> Customer:
+        """Retrieve a customer from the database.
+
+        Model usage only."""
         with self.Session() as session:
             result = session.query(Customer).filter_by(id=customer_id).one_or_none()
             session.commit()  # necessary ?
-        if not missing_ok and result is None:
-            raise OperationFailed(f"Cannot find the customer with id {customer_id}")
-        return result
+            if result is None:
+                raise OperationFailed(f"Cannot find the customer with id {customer_id}")
+            return result
 
-    def get_customers(self):
+    def get_customers(self) -> list[dict]:
+        """Retrieve customers from the database and return them as a list of dictionaries."""
         with self.Session() as session:
             result = session.query(Customer).order_by(Customer.fullname)
-            return [row.as_printable_dict(full=False) for row in result]
+            return [row.as_dict(full=False) for row in result]
 
-    def detail_customer(self, customer_id):
-        customer = self._get_customer(customer_id)
-        return customer.as_printable_dict()
+    def detail_customer(self, customer_id: int) -> dict:
+        """Retrieve a given customer from the database and return it as a dictionary."""
+        customer = self.get_customer(customer_id)
+        return customer.as_dict()
 
-    def add_customer(self, fullname, company, email, phone, employee_id):
+    def add_customer(self, fullname: str, company: str, email: str, phone: str, employee_id: int) -> dict:
+        """Add a new customer to the database (and return it as a dictionary)."""
         connected_employee = self.get_employee(id=employee_id)
         try:
             with self.Session() as session:
@@ -77,15 +88,16 @@ class CustomerModelMixin:
                 )
                 session.add(customer)
                 session.commit()
-                return customer.as_printable_dict()
+                return customer.as_dict()
         except PhoneNumberParseException:
             raise OperationFailed(f"Invalid phone number format ({phone})")
 
-    def update_customer_data(self, id, fullname, company, email, phone, employee_id):
+    def update_customer_data(self, customer_id: int, fullname: Optional[str], company: Optional[str], email: Optional[str], phone: Optional[str], employee_id: Optional[int]) -> dict:
+        """Update customer fields in the database (and return it as a dictionary)."""
         connected_employee = self.get_employee(id=employee_id)
         with self.Session() as session:
             customer = (
-                session.query(Customer).filter_by(id=id).one_or_none()
+                session.query(Customer).filter_by(id=customer_id).one_or_none()
             )  # replace by the call to _get_customer to raise not found
             if customer.commercial_contact_id != connected_employee.id:
                 raise OperationFailed(
@@ -103,9 +115,10 @@ class CustomerModelMixin:
             session.add(customer)
             session.commit()
             # session.flush()
-            return customer.as_printable_dict()
+            return customer.as_dict()
 
-    def set_customer_commercial(self, id, commercial_username):
+    def set_customer_commercial(self, customer_id: int, commercial_username: str) -> dict:
+        """Update the commercial associated to customer in database (and return the customer as dictionary)."""
         commercial = self.get_employee(username=commercial_username)
         if commercial.role.name.upper() != self.roles.COMMERCIAL.name.upper():  # temp
             raise OperationFailed(
@@ -114,10 +127,10 @@ class CustomerModelMixin:
         with self.Session() as session:
             commercial = session.merge(commercial)
             customer = (
-                session.query(Customer).filter_by(id=id).one_or_none()
+                session.query(Customer).filter_by(id=customer_id).one_or_none()
             )  # replace by the call to _get_customer to raise not found
             customer.commercial_contact_id = commercial.id
             customer.commercial_contact = commercial
             session.add(customer)
             session.commit()
-            return customer.as_printable_dict()
+            return customer.as_dict()

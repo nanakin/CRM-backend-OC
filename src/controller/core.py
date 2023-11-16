@@ -18,6 +18,8 @@ if TYPE_CHECKING:
 class Controller(
     EmployeesControllerMixin, CustomersControllerMixin, EventsControllerMixin, AuthenticationControllerMixin
 ):
+    """Controller class to act as logical interface between the view and the model."""
+
     def _execute(self,  full_request: FullRequest) -> None:
         """Execute the command corresponding to the given user request."""
         to_execute = requests_map.allowed_functions[full_request.request]
