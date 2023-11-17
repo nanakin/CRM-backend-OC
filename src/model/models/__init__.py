@@ -1,6 +1,6 @@
 from .common import Base, OperationFailed
-from .contract import Contract, ContractModelMixin
-from .customer import Customer, CustomerModelMixin
-from .employee import Employee, EmployeeModelMixin
-from .event import Event, EventModelMixin
+from .contract import Contract
+from .customer import Customer
+from .employee import Employee
+from .event import Event
 from .role import Role

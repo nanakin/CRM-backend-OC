@@ -7,15 +7,12 @@ from sqlalchemy_utils import database_exists, drop_database
 from .models import (
     Base,
     Contract,
-    ContractModelMixin,
     Customer,
-    CustomerModelMixin,
     Employee,
-    EmployeeModelMixin,
     Event,
-    EventModelMixin,
     Role,
 )
+from .managers import EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventModelMixin
 
 DEFAULT_DB = "sqlite://"  # in-memory SQLite database
 
