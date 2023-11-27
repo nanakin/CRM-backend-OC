@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from .manage import (
     AuthenticationControllerMixin,
+    ContractsControllerMixin,
     CustomersControllerMixin,
     EmployeesControllerMixin,
     EventsControllerMixin,
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
 
 
 class Controller(
-    EmployeesControllerMixin, CustomersControllerMixin, EventsControllerMixin, AuthenticationControllerMixin
+    EmployeesControllerMixin, CustomersControllerMixin, EventsControllerMixin, AuthenticationControllerMixin, ContractsControllerMixin
 ):
     """Controller class to act as logical interface between the view and the model."""
 

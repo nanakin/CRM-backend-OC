@@ -3,14 +3,42 @@ from typing import TYPE_CHECKING
 from pathlib import Path
 
 from .common import OperationFailed, Request, Roles, requests_map
+from typing import TYPE_CHECKING, Optional
+from dataclasses import dataclass
 
 if TYPE_CHECKING:
     from model import Model
     from view import View
-    from .common import Auth
 
 
 AUTH_FILENAME = Path(".auth")
+
+
+@dataclass
+class Auth:
+    """Store authentication information."""
+
+    @dataclass
+    class User:
+        """Store profile of the authenticated employee."""
+        username: str
+        id: int
+        fullname: str
+        role: Roles
+
+    user: Optional[User] = None
+
+    @property
+    def user_id(self) -> Optional[int]:
+        return self.user.id if self.user else None
+
+    @property
+    def is_authenticated(self) -> bool:
+        return self.user is not None
+
+    def identify_as(self, username: str, employee_id: int, fullname: str, role: Roles) -> None:
+        """Keep track of the authenticated user."""
+        self.user = self.User(username, employee_id, fullname, role)
 
 
 class AuthenticationControllerMixin:
@@ -63,6 +91,16 @@ class AuthenticationControllerMixin:
             username, password = self.view.ask_credentials()
             self._login_with_password(username, password)
         return self.auth
+
+    def authenticate_as_role(self, required_role: Roles) -> None:
+        """
+        Try to authenticate the user and raise an exception if the user does not have the required permissions.
+        """
+        auth = self.authenticate()
+        if not auth.is_authenticated:
+            raise OperationFailed("Authentication failed.")
+        if required_role != Roles.NONE and auth.user.role not in required_role:  # type: ignore
+            raise OperationFailed(f"{auth.user.fullname} does not have necessary permissions.")
 
     # -------------------- CRM Commands below --------------------------
 
