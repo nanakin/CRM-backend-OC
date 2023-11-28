@@ -2,9 +2,9 @@ from unittest import mock
 
 import pytest
 
-from controller import Controller
-from controller.manage.common import requests_map
-from view import FullRequest, Request
+from crm.controller import Controller
+from crm.controller.manage.common import requests_map
+from crm.view import FullRequest, Request
 
 
 @pytest.mark.parametrize("user_request", Request)

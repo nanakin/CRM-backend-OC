@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from src.model.models import Base
+from crm.model.models import Base
 
 TEST_DB = "sqlite://"  # in-memory SQLite database
 

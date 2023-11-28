@@ -3,9 +3,9 @@ from unittest import mock
 
 import pytest
 
-from controller import Controller
-from controller.manage.authentication import Auth
-from controller.manage.common import OperationFailed, Roles
+from crm.controller import Controller
+from crm.controller.manage.authentication import Auth
+from crm.controller.manage.common import OperationFailed, Roles
 
 
 @pytest.fixture

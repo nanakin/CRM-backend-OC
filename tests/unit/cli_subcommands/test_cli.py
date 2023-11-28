@@ -1,7 +1,7 @@
 import pytest
 from common import invoke_cli
 
-from src.view.cli.commands.cli import cli
+from crm.view.cli.commands.cli import cli
 
 
 def test_cli_help():

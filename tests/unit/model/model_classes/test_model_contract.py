@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy_utils import force_instant_defaults
 
-from src.model.models import Contract
+from crm.model.models import Contract
 
 force_instant_defaults()
 

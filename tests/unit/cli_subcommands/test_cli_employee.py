@@ -2,8 +2,8 @@
 from click import BadOptionUsage, BadParameter
 from common import invoke_cli
 
-from src.view.cli.commands.subcommands import cli_employee
-from src.view.requests import Request
+from crm.view.cli.commands.subcommands import cli_employee
+from crm.view.requests import Request
 
 
 def test_cli_employees_explicit_help():

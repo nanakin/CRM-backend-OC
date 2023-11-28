@@ -1,5 +1,5 @@
-from src.controller.manage.employees import EmployeesControllerMixin
-from src.view.cli.commands.subcommands import cli_employee
+from crm.controller.manage.employees import EmployeesControllerMixin
+from crm.view.cli.commands.subcommands import cli_employee
 from tests.integration.cli_signatures.common import matching_signature
 from tests.unit.cli_subcommands.common import invoke_cli
 
