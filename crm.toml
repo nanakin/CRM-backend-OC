@@ -6,6 +6,7 @@ url = "sqlite:///sample.db"
 echo = false
 reset = false
 
-[database_sample] # ignored if reset is false
-reset_with_sample = true
+[database_sample]
+populate_with_sample = true  # populate newly created database with a sample dataset
+
 

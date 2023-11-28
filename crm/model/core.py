@@ -23,7 +23,7 @@ class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventMod
             dict_roles[role.name.upper()] = role.id
         return Enum("EnumRoles", dict_roles)
 
-    def __init__(self, url: str = DEFAULT_DB, echo: bool = False, reset: bool = False) -> None:
+    def __init__(self, url: str = DEFAULT_DB, echo: bool = False, reset: bool = False):
         """Initialize the database and create tables if necessary."""
         engine = create_engine(url, echo=echo)
         self.Session = sessionmaker(engine, expire_on_commit=False)  # check scoped_session
@@ -38,5 +38,9 @@ class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventMod
         """Populate the database with sample data."""
         from .model_sample.populate import populate
 
+        with self.Session() as session:
+            if session.query(Role).count() > 0:
+                return
+        print("Populating database with a sample dataset...")
         populate(self.Session)
         self.roles = self.get_roles()

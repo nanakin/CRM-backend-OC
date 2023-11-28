@@ -42,7 +42,7 @@ def main() -> None:
     view = View()
 
     database_options = config["database"]
-    do_fill_db = config["database"]["reset"] and config["database_sample"]["reset_with_sample"]
+    do_fill_db = config["database_sample"]["populate_with_sample"]
 
     model = Model(**database_options)
     if do_fill_db:  # testing purpose
