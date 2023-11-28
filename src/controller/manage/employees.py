@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 from .common import Request, Roles, requests_map
 
 if TYPE_CHECKING:
@@ -7,7 +8,6 @@ if TYPE_CHECKING:
 
 
 class EmployeesControllerMixin:
-
     view: "View"
     model: "Model"
 

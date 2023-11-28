@@ -6,6 +6,7 @@ from .common import Base
 
 class Role(Base):
     """Role database model."""
+
     __tablename__ = "role"
 
     id: Mapped[int] = mapped_column(primary_key=True)

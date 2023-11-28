@@ -1,10 +1,9 @@
-from typing import TYPE_CHECKING
 # import jwt
+from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING, Optional
 
 from .common import OperationFailed, Request, Roles, requests_map
-from typing import TYPE_CHECKING, Optional
-from dataclasses import dataclass
 
 if TYPE_CHECKING:
     from model import Model
@@ -21,6 +20,7 @@ class Auth:
     @dataclass
     class User:
         """Store profile of the authenticated employee."""
+
         username: str
         id: int
         fullname: str
@@ -42,21 +42,21 @@ class Auth:
 
 
 class AuthenticationControllerMixin:
-
     view: "View"
     model: "Model"
     auth: "Auth"
 
     def _get_token(self):
-
         return self._load_from_persistent()
 
     def _set_authenticated_user(self, username):
         employee_as_dict = self.model.detail_employee(username)
-        self.auth.identify_as(employee_as_dict["Username"],
-                              employee_as_dict["ID"],
-                              employee_as_dict["Full name"],
-                              Roles[employee_as_dict["Role"].upper()])
+        self.auth.identify_as(
+            employee_as_dict["Username"],
+            employee_as_dict["ID"],
+            employee_as_dict["Full name"],
+            Roles[employee_as_dict["Role"].upper()],
+        )
 
     def _token_authentication(self):
         username = self._get_token()

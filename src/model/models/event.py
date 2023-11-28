@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional, Self
-from uuid import UUID
+
 from sqlalchemy import DateTime, ForeignKey, Integer, Unicode, UnicodeText
-from sqlalchemy.orm import Mapped, mapped_column, relationship, sessionmaker, Session
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from sqlalchemy.types import Uuid
 
 from .common import Base, OperationFailed
@@ -10,6 +10,7 @@ from .common import Base, OperationFailed
 
 class Event(Base):
     """Event database model."""
+
     __tablename__ = "event"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -42,13 +43,17 @@ class Event(Base):
             "Customer": str(customer),
             "Support": str(support) if support else "None",
             "Commercial": str(commercial) if commercial else "None",
-            "Start": str(self.start)}
+            "Start": str(self.start),
+        }
         if full:
-            data.update({
-                "End": str(self.end),
-                "Attendees": str(self.attendees),
-                "Location": str(self.location),
-                "Note": str(self.note)})
+            data.update(
+                {
+                    "End": str(self.end),
+                    "Attendees": str(self.attendees),
+                    "Location": str(self.location),
+                    "Note": str(self.note),
+                }
+            )
         return data
 
     @classmethod
@@ -58,5 +63,3 @@ class Event(Base):
         if result is None:
             raise OperationFailed(f"Cannot find the event with id {event_id}")
         return result
-
-

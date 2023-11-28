@@ -1,11 +1,11 @@
 import random
 import string
-
 from typing import Optional
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from model.models import OperationFailed, Employee
+from model.models import Employee, OperationFailed
 
 
 class EmployeeModelMixin:

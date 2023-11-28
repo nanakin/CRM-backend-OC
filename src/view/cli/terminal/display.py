@@ -20,16 +20,16 @@ def display_table(title: str, data: list[dict], colors: dict[str, str]):
     console.print(table)
 
 
-def display_panel(title: str, data: dict, subtitle: str,  colors: dict[str, str], focus: list | None):
+def display_panel(title: str, data: dict, subtitle: str, colors: dict[str, str], focus: list | None):
     """Display a nice colored panel with the given titles and data."""
     title_color = colors.get("title")
     to_print = Text()
     for key, value in data.items():
-        to_print.append(key + ": ", style="yellow" if focus and key in focus else "sky_blue2")
+        to_print.append(key + ": ", style="sky_blue2")
         to_print.append(value + "\n", style="yellow" if focus and key in focus else "light_cyan1")
     console.print(
-        Panel(to_print, title=title, subtitle=subtitle, expand=False),
-        justify="center    ", style=title_color)  # type: ignore [arg-type]
+        Panel(to_print, title=title, subtitle=subtitle, expand=False), justify="center    ", style=title_color
+    )  # type: ignore [arg-type]
 
 
 def _info(message: str):

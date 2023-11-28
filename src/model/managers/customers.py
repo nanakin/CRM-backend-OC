@@ -1,8 +1,9 @@
 from typing import Optional
+
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils.types.phone_number import PhoneNumberParseException
 
-from model.models import OperationFailed, Customer, Employee
+from model.models import Customer, Employee, OperationFailed
 
 
 class CustomerModelMixin:
@@ -28,7 +29,11 @@ class CustomerModelMixin:
             connected_employee = Employee.get(session, employee_id=employee_id)
             try:
                 customer = Customer(
-                    fullname=fullname, email=email, phone=phone, company=company, commercial_contact_id=connected_employee.id
+                    fullname=fullname,
+                    email=email,
+                    phone=phone,
+                    company=company,
+                    commercial_contact_id=connected_employee.id,
                 )
                 session.add(customer)
                 session.commit()
@@ -36,7 +41,15 @@ class CustomerModelMixin:
             except PhoneNumberParseException:
                 raise OperationFailed(f"Invalid phone number format ({phone})")
 
-    def update_customer_data(self, customer_id: int, fullname: Optional[str], company: Optional[str], email: Optional[str], phone: Optional[str], employee_id: Optional[int]) -> dict:
+    def update_customer_data(
+        self,
+        customer_id: int,
+        fullname: Optional[str],
+        company: Optional[str],
+        email: Optional[str],
+        phone: Optional[str],
+        employee_id: Optional[int],
+    ) -> dict:
         """Update customer fields in the database (and return it as a dictionary)."""
         with self.Session() as session:
             connected_employee = Employee.get(session, employee_id=employee_id)

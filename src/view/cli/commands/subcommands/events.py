@@ -1,6 +1,6 @@
 import click
 
-from view.requests import Request, FullRequest
+from view.requests import FullRequest, Request
 
 
 @click.group(name="event")

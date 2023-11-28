@@ -1,15 +1,16 @@
 from typing import TYPE_CHECKING
 
+from view import FullRequest
+
 from .manage import (
+    Auth,
     AuthenticationControllerMixin,
     ContractsControllerMixin,
     CustomersControllerMixin,
     EmployeesControllerMixin,
     EventsControllerMixin,
-    requests_map, Auth
+    requests_map,
 )
-
-from view import FullRequest
 
 if TYPE_CHECKING:
     from model import Model
@@ -17,11 +18,15 @@ if TYPE_CHECKING:
 
 
 class Controller(
-    EmployeesControllerMixin, CustomersControllerMixin, EventsControllerMixin, AuthenticationControllerMixin, ContractsControllerMixin
+    EmployeesControllerMixin,
+    CustomersControllerMixin,
+    EventsControllerMixin,
+    AuthenticationControllerMixin,
+    ContractsControllerMixin,
 ):
     """Controller class to act as logical interface between the view and the model."""
 
-    def _execute(self,  full_request: FullRequest) -> None:
+    def _execute(self, full_request: FullRequest) -> None:
         """Execute the command corresponding to the given user request."""
         to_execute = requests_map.allowed_functions[full_request.request]
         to_execute(self, **full_request.params)

@@ -1,7 +1,12 @@
-from src.view.cli.commands.subcommands import cli_employee
-from tests.unit.cli_subcommands.common import invoke_cli
-from tests.integration.cli_signatures.common import matching_signature
 from src.controller.manage.employees import EmployeesControllerMixin
+from src.view.cli.commands.subcommands import cli_employee
+from tests.integration.cli_signatures.common import matching_signature
+from tests.unit.cli_subcommands.common import invoke_cli
+
+# def test_add_with_owner(mock_cardsdb): #P160
+# cards_cli("add some task -o brian")
+# expected = cards.Card("some task", owner="brian", state="todo")
+# mock_cardsdb.add_card.assert_called_with(expected)
 
 
 def test_cli_employee_list_signature():

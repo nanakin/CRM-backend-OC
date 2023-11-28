@@ -1,6 +1,7 @@
 from typing import Optional, Self
+
 from sqlalchemy import ForeignKey, String, Unicode
-from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from sqlalchemy_utils import PasswordType
 
 from .common import Base, OperationFailed
@@ -8,6 +9,7 @@ from .common import Base, OperationFailed
 
 class Employee(Base):
     """Employee database model."""
+
     __tablename__ = "employee"
 
     id: Mapped[int] = mapped_column(primary_key=True)

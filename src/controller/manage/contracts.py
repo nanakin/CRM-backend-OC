@@ -1,10 +1,12 @@
 from typing import TYPE_CHECKING
-from .common import Request, Roles, requests_map
 from uuid import UUID
+
+from .common import Request, Roles, requests_map
 
 if TYPE_CHECKING:
     from model import Model
     from view import View
+
     from .common import Auth
 
 

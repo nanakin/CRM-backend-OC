@@ -1,4 +1,4 @@
-from .authentication import AuthenticationControllerMixin, Auth
+from .authentication import Auth, AuthenticationControllerMixin
 from .common import requests_map
 from .contracts import ContractsControllerMixin
 from .customers import CustomersControllerMixin

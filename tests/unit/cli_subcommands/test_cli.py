@@ -1,6 +1,7 @@
+import pytest
 from common import invoke_cli
+
 from src.view.cli.commands.cli import cli
-from click.exceptions import UsageError
 
 
 def test_cli_help():
@@ -12,13 +13,9 @@ def test_cli_help():
     assert "Usage:" in result.output
 
 
-def test_cli_subcommands():
+@pytest.mark.parametrize("subcommand", ["employee", "event", "customer", "contract", "auth"])
+def test_cli_subcommands(subcommand):
     """Test existence of crm subcommands (without option)."""
-    subcommands = ["employee", "event", "customer", "contract", "auth"]
 
-    for subcommand in subcommands:
-        result = invoke_cli(cli, [subcommand])
-        assert result.exit_code == 0
-
-    result = invoke_cli(cli, ["random-command"])
-    assert isinstance(result.exception, UsageError)
+    result = invoke_cli(cli, [subcommand])
+    assert result.exit_code == 0

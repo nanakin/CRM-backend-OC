@@ -1,11 +1,12 @@
 import datetime
-import pytest
-from src.model.models import Contract
-from sqlalchemy_utils import force_instant_defaults
 from unittest.mock import Mock
 from uuid import UUID
 
+import pytest
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy_utils import force_instant_defaults
+
+from src.model.models import Contract
 
 force_instant_defaults()
 
@@ -30,7 +31,7 @@ def test_contract_constructor_with_default(db_session):
     assert contract.signed is False
     assert contract.total_amount == 0
     assert contract.total_paid == 0
-    assert hasattr(contract, 'customer')
+    assert hasattr(contract, "customer")
 
 
 def test_get_contract(db_session):
@@ -57,15 +58,23 @@ def test_contract_add_payment():
 
 def test_as_dict(db_session):
     """Test the contract 'as_dict' method."""
-    contract = Contract(customer_id=3,
-                        total_amount=89899,
-                        signed=True,
-                        total_paid=3243,
-                        creation_date=datetime.datetime.fromisoformat("2021-12-30-10:02:59"))
+    contract = Contract(
+        customer_id=3,
+        total_amount=89899,
+        signed=True,
+        total_paid=3243,
+        creation_date=datetime.datetime.fromisoformat("2021-12-30-10:02:59"),
+    )
     contract.customer = Mock()
     contract.customer.commercial_contact = None
-    expected = {'UUID': str(contract.id).upper(), 'Customer': str(contract.customer), 'Commercial': 'None', 'Signed': 'True',
-                'Total due': '866.56 €', 'Total amount': '898.99 €', 'Creation date': '2021-12-30 10:02:59'}
+    expected = {
+        "UUID": str(contract.id).upper(),
+        "Customer": str(contract.customer),
+        "Commercial": "None",
+        "Signed": "True",
+        "Total due": "866.56 €",
+        "Total amount": "898.99 €",
+        "Creation date": "2021-12-30 10:02:59",
+    }
     result = contract.as_dict()
     assert result == expected
-

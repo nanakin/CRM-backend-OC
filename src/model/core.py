@@ -1,18 +1,11 @@
 from enum import Enum
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
-from .models import (
-    Base,
-    Contract,
-    Customer,
-    Employee,
-    Event,
-    Role,
-)
-from .managers import EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventModelMixin
+from .managers import ContractModelMixin, CustomerModelMixin, EmployeeModelMixin, EventModelMixin
+from .models import Base, Role
 
 DEFAULT_DB = "sqlite://"  # in-memory SQLite database
 
@@ -22,6 +15,7 @@ class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventMod
 
     def get_roles(self):
         """Retrieve roles from the database and return an Enum to facilitate permissions management."""
+        # to-do : change and move this method
         with self.Session() as session:
             roles = session.query(Role).all()
         dict_roles = {}
@@ -32,7 +26,7 @@ class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventMod
     def __init__(self, url: str = DEFAULT_DB, echo: bool = False, reset: bool = False) -> None:
         """Initialize the database and create tables if necessary."""
         engine = create_engine(url, echo=echo)
-        self.Session = sessionmaker(engine, expire_on_commit=False)
+        self.Session = sessionmaker(engine, expire_on_commit=False)  # check scoped_session
         if reset:
             drop_database(engine.url)
         if not database_exists(url):

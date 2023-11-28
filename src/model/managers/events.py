@@ -1,8 +1,10 @@
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
+
 from sqlalchemy.orm import sessionmaker
-from model.models import Event, Employee, Contract, OperationFailed
+
+from model.models import Contract, Employee, Event, OperationFailed
 
 
 class EventModelMixin:
@@ -34,8 +36,8 @@ class EventModelMixin:
                 raise OperationFailed(f"Impossible to create an event for the unsigned contrat {contract_uuid}.")
             if contract.customer.commercial_contact != connected_employee:
                 raise OperationFailed(
-                    f"The employee {connected_employee} does not have the permission to add events to {contract.customer} "
-                    f"contracts (linked to {contract.customer.commercial_contact})."
+                    f"The employee {connected_employee} does not have the permission to add events to "
+                    f"{contract.customer} contracts (linked to {contract.customer.commercial_contact})."
                 )
             event = Event(contract_id=contract_uuid, name=name)
             session.add(event)
@@ -56,15 +58,25 @@ class EventModelMixin:
             session.commit()
             return event.as_dict()
 
-    def update_event(self, event_id: int, name: Optional[str], start: Optional[datetime], end: Optional[datetime], attendees: Optional[int], location: Optional[str], note: Optional[str], employee_id: int) -> dict:
+    def update_event(
+        self,
+        event_id: int,
+        name: Optional[str],
+        start: Optional[datetime],
+        end: Optional[datetime],
+        attendees: Optional[int],
+        location: Optional[str],
+        note: Optional[str],
+        employee_id: int,
+    ) -> dict:
         """Update event fields in database (and return the event as a dictionary)."""
         with self.Session() as session:
             connected_employee = Employee.get(session, employee_id=employee_id)
             event = Event.get(session, event_id)
             if event.support_contact_id != connected_employee.id:
                 raise OperationFailed(
-                    f'The employee {connected_employee} does not have the permission manage the event "{event}" (linked '
-                    f"to {event.support_contact})."
+                    f'The employee {connected_employee} does not have the permission manage the event "{event}" '
+                    f"(linked to {event.support_contact})."
                 )
             if name:
                 event.name = name

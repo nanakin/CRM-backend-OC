@@ -1,17 +1,26 @@
-from .commands import cli_main
-from .terminal.display import notification, display_panel, display_table
-from .terminal.input import ask_credentials
-from view.requests import FullRequest
+from typing import Optional
+
 from view.interface import IView
 from view.log import LogStatus
-from typing import Optional
+from view.requests import FullRequest
+
+from .commands import cli_main
+from .terminal.display import display_panel, display_table, notification
+from .terminal.input import ask_credentials
 
 
 class View(IView):
     """Methods to display or to interacts with the user."""
 
-    colors = {"Support": "green", "Commercial": "light_goldenrod2", "Customer": "dark_orange",
-              "Contract": "yellow", "Event": "pink1", "Employee": "cyan", "ID": "bright_white"}
+    colors = {
+        "Support": "green",
+        "Commercial": "light_goldenrod2",
+        "Customer": "dark_orange",
+        "Contract": "cornsilk1",
+        "Event": "pink1",
+        "Employee": "cyan",
+        "ID": "bright_white",
+    }
 
     def notification(self, status: LogStatus, message: str) -> None:
         notification(status, message)

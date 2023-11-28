@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import Self
+
 from sqlalchemy import DateTime, ForeignKey, Unicode
-from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from sqlalchemy.sql import func
 from sqlalchemy_utils import EmailType, PhoneNumberType
 
@@ -10,6 +11,7 @@ from .common import Base, OperationFailed
 
 class Customer(Base):
     """Customer database model."""
+
     __tablename__ = "customer"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -40,13 +42,17 @@ class Customer(Base):
             "ID": str(self.id),
             "Full name": self.fullname,
             "Company": self.company,
-            "Commercial": str(self.commercial_contact)}
+            "Commercial": str(self.commercial_contact),
+        }
         if full:
-            data.update({
-                "Email": str(self.email),
-                "Phone": str(self.phone),
-                "Creation date": str(self.creation_date),
-                "Last modification": str(self.last_modified)})
+            data.update(
+                {
+                    "Email": str(self.email),
+                    "Phone": str(self.phone),
+                    "Creation date": str(self.creation_date),
+                    "Last modification": str(self.last_modified),
+                }
+            )
         return data
 
     @classmethod

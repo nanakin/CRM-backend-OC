@@ -1,8 +1,10 @@
+from unittest import mock
+
+import pytest
+
 from controller import Controller
 from controller.manage.common import requests_map
 from view import FullRequest, Request
-import pytest
-from unittest import mock
 
 
 @pytest.mark.parametrize("user_request", Request)
@@ -22,4 +24,3 @@ def test_controller_execute(user_request):
     controller = Controller(view, model)
     controller.read_and_execute_command()
     mocked_method.assert_called_once()
-

@@ -1,11 +1,10 @@
 from enum import Flag, auto
-from typing import TYPE_CHECKING, Callable, Optional
-from dataclasses import dataclass
+from functools import wraps
+from typing import TYPE_CHECKING, Callable
 
 from model import OperationFailed
 from view.log import LogStatus
 from view.requests import Request  # noqa
-from functools import wraps
 
 if TYPE_CHECKING:
     from controller.core import Controller
@@ -13,6 +12,7 @@ if TYPE_CHECKING:
 
 class Roles(Flag):
     """Employees roles as Enum to be used in the controller permission."""
+
     NONE = auto()
     COMMERCIAL = auto()
     SUPPORT = auto()
@@ -38,6 +38,7 @@ class RequestsMapping:
             @wraps(func)  # preserve original signature of the decorated function
             def notif_and_authenticate_wrap(controller: "Controller", *args, **kwargs) -> None:
                 """Add a wrapper that notifies the user of the operation result."""
+
                 def decorated_func(*controller_args, **controller_kwargs):
                     if required_role is not None:
                         try:
@@ -51,7 +52,9 @@ class RequestsMapping:
                         controller.view.notification(LogStatus.WARNING, str(e))
                     else:
                         controller.view.notification(LogStatus.INFO, "Successful operation.")
+
                 return decorated_func(controller, *args, **kwargs)
+
             self.allowed_functions[request] = notif_and_authenticate_wrap
             return notif_and_authenticate_wrap
 

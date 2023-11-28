@@ -1,14 +1,15 @@
 from typing import TYPE_CHECKING
+
 from .common import Request, Roles, requests_map
 
 if TYPE_CHECKING:
     from model import Model
     from view import View
+
     from .common import Auth
 
 
 class CustomersControllerMixin:
-
     view: "View"
     model: "Model"
     auth: "Auth"
@@ -30,9 +31,7 @@ class CustomersControllerMixin:
     @requests_map.register(Request.NEW_CUSTOMER, required_role=Roles.COMMERCIAL)
     def new_customer(self, fullname: str, company: str, email: str, phone: str) -> None:
         """Add a new customer to database and display it."""
-        displayable_customer = self.model.add_customer(
-            fullname, company, email, phone, employee_id=self.auth.user_id
-        )
+        displayable_customer = self.model.add_customer(fullname, company, email, phone, employee_id=self.auth.user_id)
         self.view.display_customer(displayable_customer, focus=displayable_customer.keys())
 
     @requests_map.register(Request.UPDATE_CUSTOMER, required_role=Roles.COMMERCIAL)
@@ -43,8 +42,7 @@ class CustomersControllerMixin:
         )
         fields_name = {"Full name": fullname, "Company": company, "Email": email, "Phone": phone}
         self.view.display_customer(
-            displayable_customer,
-            focus=[name for name, new_value in fields_name.items() if new_value is not None]
+            displayable_customer, focus=[name for name, new_value in fields_name.items() if new_value is not None]
         )
 
     @requests_map.register(Request.SET_CUSTOMER_COMMERCIAL, required_role=Roles.ADMINISTRATOR)

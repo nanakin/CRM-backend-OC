@@ -4,8 +4,9 @@ import sys
 
 import click
 
-from .subcommands import cli_authentication, cli_contract, cli_customer, cli_employee, cli_event
 from view.requests import FullRequest
+
+from .subcommands import cli_authentication, cli_contract, cli_customer, cli_employee, cli_event
 
 
 @click.group()

@@ -1,9 +1,9 @@
 from datetime import datetime
-from uuid import uuid4, UUID
 from typing import Self
+from uuid import UUID, uuid4
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer
-from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
 from sqlalchemy.sql import func
 from sqlalchemy.types import Uuid
 
@@ -12,6 +12,7 @@ from .common import Base, OperationFailed
 
 class Contract(Base):
     """Contract database model."""
+
     __tablename__ = "contract"
 
     id: Mapped[Uuid] = mapped_column(Uuid, primary_key=True, default=uuid4)
@@ -19,7 +20,7 @@ class Contract(Base):
     customer: Mapped["Customer"] = relationship(lazy="subquery")  # noqa: F821
     signed: Mapped[bool] = mapped_column(Boolean, default=False)
     total_amount: Mapped[int] = mapped_column(Integer, default=0)
-    total_payed: Mapped[int] = mapped_column(Integer, default=0)
+    total_paid: Mapped[int] = mapped_column(Integer, default=0)
     creation_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     def __str__(self):
@@ -39,17 +40,26 @@ class Contract(Base):
             "Customer": str(self.customer),
             "Commercial": str(commercial),
             "Signed": str(self.signed),
-            "Total due": str(self.total_amount - self.total_payed) + " €"}
+            "Total due": str((self.total_amount - self.total_paid) / 100) + " €",
+        }
         if full:
-            data.update({
-                "Total amount": str(self.total_amount) + " €",
-                "Creation date": str(self.creation_date)})
+            data.update(
+                {"Total amount": str(self.total_amount / 100) + " €", "Creation date": str(self.creation_date)}
+            )
         return data
+
+    def update_total_amount(self, total_amount: float) -> None:
+        """Update the total paid amount of the contract."""
+        self.total_amount = int(total_amount * 100)
+
+    def add_payment(self, payed: float) -> None:
+        """Update the total paid amount of the contract."""
+        self.total_paid += int(payed * 100)
 
     @classmethod
     def get(cls, session: Session, contract_uuid: UUID) -> Self:
         """Retrieve a contract from a given database session, raise an exception otherwise."""
         result = session.get(cls, contract_uuid)
         if result is None:
-            raise OperationFailed(f"Cannot find the contract with uuid {contract_uuid}")
+            raise OperationFailed(f"Cannot find the contract with uuid {str(contract_uuid).upper()}")
         return result
