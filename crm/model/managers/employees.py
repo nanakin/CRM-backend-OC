@@ -5,7 +5,7 @@ from typing import Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from crm.model.models import Employee, OperationFailed
+from crm.model.models import Employee, Role, OperationFailed
 
 
 class EmployeeModelMixin:
@@ -70,7 +70,8 @@ class EmployeeModelMixin:
         role_id = self.roles[role_name.upper()].value  # temp
         with self.Session() as session:
             employee = Employee.get(session, username=username)
-            employee.role_id = role_id
+            role = session.get(Role, role_id)
+            employee.role = role
             session.add(employee)
             session.commit()
             return employee.as_dict()

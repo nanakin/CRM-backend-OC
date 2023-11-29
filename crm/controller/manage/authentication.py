@@ -1,4 +1,5 @@
-# import jwt
+import jwt
+from datetime import datetime, timedelta
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
@@ -6,8 +7,8 @@ from typing import TYPE_CHECKING, Optional
 from .common import OperationFailed, Request, Roles, requests_map
 
 if TYPE_CHECKING:
-    from model import Model
-    from view import View
+    from crm.model import Model
+    from crm.view import View
 
 
 AUTH_FILENAME = Path(".auth")
@@ -46,10 +47,48 @@ class AuthenticationControllerMixin:
     model: "Model"
     auth: "Auth"
 
-    def _get_token(self):
-        return self._load_from_persistent()
+    def _get_data_from_token(self):
+        def load_from_persistent():
+            try:
+                with open(AUTH_FILENAME, encoding="utf-8") as f:
+                    token = f.read()
+            except FileNotFoundError:
+                return None
+            except (PermissionError, OSError, IOError):
+                print("Failed to load authentication token.")
+                return None
+            return token
+
+        token = load_from_persistent()
+        if not token:
+            return None
+        secret_key = self.model.secret_key
+        try:
+            data = jwt.decode(token, secret_key, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            print("Authentication token expired, please log again.")
+        except jwt.InvalidTokenError as err:
+            print("Invalid token:", err)
+        else:
+            return data["username"]
 
     def _set_authenticated_user(self, username):
+        def create_token():
+            secret_key = self.model.secret_key
+            token = jwt.encode(
+                {"username": self.auth.user.username, "exp": datetime.utcnow() + timedelta(minutes=30)},
+                secret_key,
+                algorithm="HS256",
+            )
+            return token
+
+        def persistent_save():
+            try:
+                with open(AUTH_FILENAME, "w", encoding="utf-8") as f:
+                    f.write(token)
+            except (FileNotFoundError, PermissionError, OSError, IOError):
+                print("Failed to save authentication token.")
+
         employee_as_dict = self.model.detail_employee(username)
         self.auth.identify_as(
             employee_as_dict["Username"],
@@ -57,31 +96,19 @@ class AuthenticationControllerMixin:
             employee_as_dict["Full name"],
             Roles[employee_as_dict["Role"].upper()],
         )
+        token = create_token()
+        persistent_save()
 
     def _token_authentication(self):
-        username = self._get_token()
+        username = self._get_data_from_token()
         if username:
             self._set_authenticated_user(username)
         return self.auth.is_authenticated
-
-    def _persistent_save(self):
-        with open(AUTH_FILENAME, "w", encoding="utf-8") as f:
-            f.write(self.auth.user.username)  # temp
-
-    @staticmethod
-    def _load_from_persistent():
-        try:
-            with open(AUTH_FILENAME, encoding="utf-8") as f:
-                username = f.read()  # temp
-        except FileNotFoundError:
-            username = None
-        return username
 
     def _login_with_password(self, username, password):
         is_valid = self.model.valid_password(username, password)
         if is_valid:
             self._set_authenticated_user(username)
-            self._persistent_save()
         return is_valid
 
     # ---------- used by require_authentication decorator --------------
