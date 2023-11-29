@@ -19,9 +19,9 @@ class EventsControllerMixin:
     # -------------------- CRM Commands below --------------------------
 
     @requests_map.register(Request.LIST_EVENTS, required_role=Roles.ALL)
-    def list_events(self, not_signed_filter: bool, not_paid_filter: bool) -> None:
+    def list_events(self, no_support_assigned: bool) -> None:
         """Retrieve events from database and display them."""
-        displayable_events = self.model.get_events(not_signed_filter, not_paid_filter)
+        displayable_events = self.model.get_events(no_support_assigned)
         self.view.display_events(displayable_events)
 
     @requests_map.register(Request.DETAIL_EVENT, required_role=Roles.ALL)

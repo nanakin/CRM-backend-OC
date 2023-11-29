@@ -12,13 +12,13 @@ class EventModelMixin:
 
     Session: sessionmaker
 
-    def get_events(self, not_signed_filter: bool, not_paid_filter: bool) -> list[dict]:
+    def get_events(self, no_support_assigned: bool) -> list[dict]:
         """Retrieve events from the database and return them as a list of dictionaries."""
         with self.Session() as session:
-            if not not_paid_filter and not not_signed_filter:
+            if not no_support_assigned:
                 result = session.query(Event)
             else:
-                result = session.query(Event).filter()  # to-do : add filters
+                result = session.query(Event).filter_by(support_contact_id=None)
             return [row.as_dict(full=False) for row in result]
 
     def detail_event(self, event_id: int) -> dict:
