@@ -34,14 +34,15 @@ def add_payment(**kwargs) -> FullRequest:
 @cli_contract.command(help="Update contract amount")
 @click.argument("contract-uuid", type=click.UUID)
 @click.option(
-    "--total-amount", default=None, prompt=False, prompt_required=False, type=float, help="Define the new total amount"
+    "--total-amount", default=None, prompt=True, prompt_required=False, type=float, help="Define the new total amount"
 )
 @click.option(
-    "--customer-id", default=None, prompt=False, prompt_required=False, type=int, help="Define the new customer"
+    "--customer-id", default=None, prompt=True, prompt_required=False, type=int, help="Define the new customer"
 )
 def update(**kwargs) -> FullRequest:
     """Command to update a contract data (customer and amount fields)."""
-    # to-do: if no option, prompt
+    if kwargs["customer_id"] is None and kwargs["total_amount"] is None:
+        raise click.BadParameter("You must specify at least one field to update.")
     return FullRequest(Request.UPDATE_CONTRACT, **kwargs)
 
 

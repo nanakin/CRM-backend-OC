@@ -78,17 +78,17 @@ class EventModelMixin:
                     f'The employee {connected_employee} does not have the permission manage the event "{event}" '
                     f"(linked to {event.support_contact})."
                 )
-            if name:
+            if name is not None:
                 event.name = name
             if start:
                 event.start = start
             if end:
                 event.end = end
-            if attendees:
+            if attendees is not None:
                 event.attendees = attendees
-            if location:
+            if location is not None:
                 event.location = location
-            if note:
+            if note is not None:
                 event.note = note
             session.add(event)
             session.commit()

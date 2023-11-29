@@ -9,15 +9,17 @@ from .console import console
 
 def display_table(title: str, data: list[dict], colors: dict[str, str]):
     """Display a nice colored table with the given title and data."""
-    title_color = colors.get("title")
-    table = Table(title=title, title_style=title_color)
     if data:
+        title_color = colors.get("title")
+        table = Table(title=title, title_style=title_color)
         for column_n, key in enumerate(data[0].keys()):
             color = colors.get(key, "white")
             table.add_column(key, justify="left", style=color)
         for row in data:
             table.add_row(*row.values())
-    console.print(table)
+        console.print(table)
+    else:
+        console.print("No data to display.")
 
 
 def display_panel(title: str, data: dict, subtitle: str, colors: dict[str, str], focus: list | None):

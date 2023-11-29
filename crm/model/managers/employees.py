@@ -88,9 +88,9 @@ class EmployeeModelMixin:
         """Update employee fields in database (and return the employee as dictionary)."""
         with self.Session() as session:
             employee = Employee.get(session, employee_id=employee_id)
-            if username:
+            if username is not None:
                 employee.username = username
-            else:
+            if fullname is not None:
                 employee.fullname = fullname
             session.add(employee)
             session.commit()

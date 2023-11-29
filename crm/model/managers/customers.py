@@ -53,7 +53,7 @@ class CustomerModelMixin:
         """Update customer fields in the database (and return it as a dictionary)."""
         with self.Session() as session:
             connected_employee = Employee.get(session, employee_id=employee_id)
-            customer = Customer.get(self.Session, customer_id)
+            customer = Customer.get(session, customer_id)
             if customer.commercial_contact_id != connected_employee.id:
                 raise OperationFailed(
                     f"The employee {connected_employee.fullname} does not have the permission to edit the customer "

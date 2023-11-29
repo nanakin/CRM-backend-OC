@@ -73,9 +73,9 @@ class ContractModelMixin:
         with self.Session() as session:
             contract = Contract.get(session, contract_uuid)
             self.verify_contract_authorization(session, employee_id, contract)
-            if total_amount:
+            if total_amount is not None:
                 contract.update_total_amount(total_amount)
-            if customer_id:
+            if customer_id is not None:
                 contract.customer_id = customer_id
             session.add(contract)
             session.commit()

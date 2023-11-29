@@ -5,10 +5,10 @@ from crm.model import Contract, Customer, Employee, Event, Role
 
 def get_roles():
     roles = {
-        "none": Role(name="none"),
-        "commercial": Role(name="commercial"),
-        "support": Role(name="support"),
-        "administrator": Role(name="administrator"),
+        "NONE": Role(name="NONE"),
+        "COMMERCIAL": Role(name="COMMERCIAL"),
+        "SUPPORT": Role(name="SUPPORT"),
+        "ADMINISTRATOR": Role(name="ADMINISTRATOR"),
     }
     return roles
 
@@ -16,24 +16,24 @@ def get_roles():
 def get_employees(roles):
     employees = {
         "caroline": Employee(
-            fullname="Caroline Cridou", username="caroline_c", password="caroline", role_id=roles["commercial"].id
+            fullname="Caroline Cridou", username="caroline_c", password="caroline", role_id=roles["COMMERCIAL"].id
         ),
         "christophe": Employee(
             fullname="Christophe Criselleau",
             username="christophe_c",
             password="christophe",
-            role_id=roles["commercial"].id,
+            role_id=roles["COMMERCIAL"].id,
         ),
         "amelie": Employee(
-            fullname="Amelie Alumu", username="amelie_a", password="amelie", role_id=roles["administrator"].id
+            fullname="Amelie Alami", username="amelie_a", password="amelie", role_id=roles["ADMINISTRATOR"].id
         ),
         "amandine": Employee(
-            fullname="Amandine Aprostit", username="amandine_a", password="amandine", role_id=roles["administrator"].id
+            fullname="Amandine Aprani", username="amandine_a", password="amandine", role_id=roles["ADMINISTRATOR"].id
         ),
         "sebastien": Employee(
-            fullname="Sebastien Serbot", username="sebastien_s", password="sebastien", role_id=roles["support"].id
+            fullname="Sebastien Serbot", username="sebastien_s", password="sebastien", role_id=roles["SUPPORT"].id
         ),
-        "sarah": Employee(fullname="Sarah Sergin", username="sarah_s", password="sarah", role_id=roles["support"].id),
+        "sarah": Employee(fullname="Sarah Sergin", username="sarah_s", password="sarah", role_id=roles["SUPPORT"].id),
     }
     return employees
 

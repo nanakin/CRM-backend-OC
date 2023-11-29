@@ -10,7 +10,7 @@
 - [Installation](#installation)
     
 ## Preamble
-This website was designed for a school project with specific requirements and fixed constraints.
+This application was designed for a school project with specific requirements and fixed constraints.
 It was developed in a limited period of time and in this context this project is not intended
 to evolve that much once finished. This project is not open to contribution.
 The following need is fictive.
@@ -20,8 +20,6 @@ The following need is fictive.
 <img src="" alt="Epic Events logo" width=100>
 
 ### Project context
-SoftDesk, a software publishing company, decided to develop an application to **report and track technical problems**.
-I was hired as a software engineer to create an efficient and secure back-end to serve front-end applications on different platforms, using a **RESTful API** for their communications.
 
 
 ### About the project design and compliance
@@ -34,7 +32,7 @@ This application was tested with [python](https://www.python.org/) `3.11`  and [
 
 - Database: [SQLAlchemy]()
 - Command Line Interface: [click]() 
-- Terminal output: [rich]()
+- Terminal User Interface: [rich]()
 - Authentication: [Simple JWT]()
 
 ## Installation
