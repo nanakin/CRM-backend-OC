@@ -37,7 +37,7 @@ def display_panel(title: str, data: dict, subtitle: str, colors: dict[str, str],
 def _info(message: str):
     """Display an informative message."""
     text = Text("✅ " + message)
-    text.stylize("bold green")
+    text.stylize("bold white")
     console.print(text)
 
 

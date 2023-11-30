@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Callable
 from crm.model import OperationFailed
 from crm.view.log import LogStatus
 from crm.view.requests import Request  # noqa
+from crm.view import ViewOperationFailed
 
 if TYPE_CHECKING:
     from crm.controller.core import Controller
@@ -43,7 +44,7 @@ class RequestsMapping:
                     if required_role is not None:
                         try:
                             controller.authenticate_as_role(required_role)
-                        except OperationFailed as e:
+                        except (OperationFailed, ViewOperationFailed) as e:
                             controller.view.notification(LogStatus.WARNING, str(e))
                             return
                     try:

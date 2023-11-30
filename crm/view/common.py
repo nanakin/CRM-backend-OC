@@ -1,0 +1,2 @@
+class ViewOperationFailed(Exception):
+    pass

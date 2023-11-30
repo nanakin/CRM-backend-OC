@@ -1,10 +1,14 @@
 from rich.prompt import Prompt
 
 from .console import console
+from crm.view.common import ViewOperationFailed
 
 
 def ask_credentials():
     console.print("This action requires user authentication")
-    username = Prompt.ask("Username")
-    password = Prompt.ask("Password", password=True)
-    return username, password
+    try:
+        username = Prompt.ask("Username")
+        password = Prompt.ask("Password", password=True)
+        return username, password
+    except KeyboardInterrupt:
+        raise ViewOperationFailed("Authentication cancelled.")

@@ -55,7 +55,7 @@ class AuthenticationControllerMixin:
             except FileNotFoundError:
                 return None
             except (PermissionError, OSError, IOError):
-                print("Failed to load authentication token.")
+                print("⚠ Failed to load authentication token.")
                 return None
             return token
 
@@ -66,9 +66,9 @@ class AuthenticationControllerMixin:
         try:
             data = jwt.decode(token, secret_key, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
-            print("Authentication token expired, please log again.")
+            print("⚠ Authentication token expired, please log again.")
         except jwt.InvalidTokenError as err:
-            print("Invalid token:", err)
+            print("⚠ Invalid token:", err)
         else:
             return data["username"]
 
@@ -87,7 +87,7 @@ class AuthenticationControllerMixin:
                 with open(AUTH_FILENAME, "w", encoding="utf-8") as f:
                     f.write(token)
             except (FileNotFoundError, PermissionError, OSError, IOError):
-                print("Failed to save authentication token.")
+                print("⚠ Failed to save authentication token.")
 
         employee_as_dict = self.model.detail_employee(username)
         self.auth.identify_as(
