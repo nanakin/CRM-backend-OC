@@ -56,7 +56,6 @@ class Populate:
     @with_session_commit
     def populate_key(self) -> Iterable[Any]:
         key = Key(secret="".join(random.choices(string.ascii_lowercase, k=120)))
-        print(key.secret)
         return [key]
 
 

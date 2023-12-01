@@ -5,13 +5,13 @@ import sys
 import click
 
 from crm.view.requests import FullRequest
-
+from crm.view.common import ViewOperationFailed
 from .subcommands import cli_authentication, cli_contract, cli_customer, cli_employee, cli_event
 
 
 @click.group()
 def cli() -> int | FullRequest:
-    """CRM application allows employees, customers, contracts and events management."""
+    """CRM application allowing employees, customers, contracts and events management."""
 
 
 cli.add_command(cli_employee)
@@ -35,6 +35,6 @@ def cli_main() -> FullRequest | None:
             return returned
     except click.ClickException as exc:
         exc.show()  # print click error explanation
-        sys.exit(click.ClickException.exit_code)
+        raise ViewOperationFailed
     except click.exceptions.Abort:  # quit at ctrl-c command
-        sys.exit()
+        raise ViewOperationFailed

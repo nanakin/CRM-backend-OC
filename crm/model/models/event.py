@@ -38,7 +38,7 @@ class Event(Base):
         support = self.support_contact
         data = {
             "ID": str(self.id),
-            "Name": self.name.capitalize(),
+            "Name": self.name,
             "Contract": str(self.contract),
             "Customer": str(customer),
             "Support": str(support) if support else "None",

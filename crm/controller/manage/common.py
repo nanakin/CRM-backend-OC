@@ -46,11 +46,12 @@ class RequestsMapping:
                             controller.authenticate_as_role(required_role)
                         except (OperationFailed, ViewOperationFailed) as e:
                             controller.view.notification(LogStatus.WARNING, str(e))
-                            return
+                            raise e
                     try:
                         func(*controller_args, **controller_kwargs)
                     except OperationFailed as e:
                         controller.view.notification(LogStatus.WARNING, str(e))
+                        raise e
                     else:
                         controller.view.notification(LogStatus.INFO, "Successful operation.")
 

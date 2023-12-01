@@ -41,14 +41,20 @@ class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventMod
     def __init__(self, url: str = DEFAULT_DB, echo: bool = False, reset: bool = False):
         """Initialize the database and create tables if necessary."""
         engine = create_engine(url, echo=echo)
-        self.Session = sessionmaker(engine, expire_on_commit=False)  # check scoped_session
-        if reset:
+        self.engine = engine
+        self.Session = sessionmaker(engine, expire_on_commit=False)
+        if reset and database_exists(url):
             drop_database(engine.url)
         if not database_exists(url):
             Base.metadata.create_all(engine)
         else:
             self.roles = self.get_roles()
             self.secret_key = self.get_secret_key()
+
+    def end(self):
+        """Close the database."""
+        if self.engine:
+            self.engine.dispose()
 
     def populate_with_sample(self):  # possibility to move this method
         """Populate the database with sample data."""
@@ -57,7 +63,7 @@ class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventMod
         with self.Session() as session:
             if session.query(Role).count() > 0:
                 return
-        print("Populating database with a sample dataset...")
+        print("Populating database with a dataset sample ...")
         populate(self.Session)
         self.roles = self.get_roles()
         self.secret_key = self.get_secret_key()
