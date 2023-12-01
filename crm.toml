@@ -2,7 +2,7 @@
 record = false
 
 [database]
-url = "sqlite:///sample.db"
+url = "sqlite:///crm.db"
 echo = false
 reset = false
 

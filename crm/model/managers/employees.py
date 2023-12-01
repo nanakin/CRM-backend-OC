@@ -44,8 +44,12 @@ class EmployeeModelMixin:
         """Delete an employee from the database."""
         with self.Session() as session:
             employee = Employee.get(session, username=username)
-            session.delete(employee)
-            session.commit()
+            try:
+                session.delete(employee)
+                session.commit()
+            except IntegrityError as e:
+                raise OperationFailed("Impossible to delete this employee."
+                                      " Please replace the employee in his role beforehand.")
 
     def valid_password(self, username: str, password: str) -> bool:
         """Return True if the password is valid, False otherwise."""

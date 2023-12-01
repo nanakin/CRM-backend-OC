@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Self
+from typing import Self, Optional
 
 from sqlalchemy import DateTime, ForeignKey, Unicode
 from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
@@ -16,9 +16,9 @@ class Customer(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     fullname: Mapped[str] = mapped_column(Unicode(255))
-    email: Mapped[str] = mapped_column(EmailType)  # try type
+    email: Mapped[str] = mapped_column(EmailType)
     phone: Mapped[str] = mapped_column(PhoneNumberType)
-    company: Mapped[str] = mapped_column(Unicode(255), nullable=True)
+    company: Mapped[Optional[str]] = mapped_column(Unicode(255))
     commercial_contact_id: Mapped[int] = mapped_column(ForeignKey("employee.id"))
     commercial_contact: Mapped["Employee"] = relationship(lazy="subquery")  # noqa: F821
     creation_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
