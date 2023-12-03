@@ -5,7 +5,7 @@ from typing import Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from crm.model.models import Employee, Role, OperationFailed
+from crm.model.models import Employee, Customer, Role, Event, OperationFailed
 
 
 class EmployeeModelMixin:
@@ -75,6 +75,12 @@ class EmployeeModelMixin:
         with self.Session() as session:
             employee = Employee.get(session, username=username)
             role = session.get(Role, role_id)
+            if ((role_id != self.roles.COMMERCIAL.value
+                 and session.query(Customer).filter_by(commercial_contact_id=employee.id).count()) or
+                (role_id != self.roles.SUPPORT.value
+                 and session.query(Event).filter_by(support_contact_id=employee.id).count())):
+                raise OperationFailed("Impossible to change the role of this employee."
+                                      " Please replace the employee in his role beforehand.")
             employee.role = role
             session.add(employee)
             session.commit()
