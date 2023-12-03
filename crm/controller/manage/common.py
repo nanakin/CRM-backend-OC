@@ -18,7 +18,7 @@ class Roles(Flag):
     COMMERCIAL = auto()
     SUPPORT = auto()
     ADMINISTRATOR = auto()
-    ALL = COMMERCIAL | SUPPORT | ADMINISTRATOR
+    ALL = COMMERCIAL | SUPPORT | ADMINISTRATOR | NONE
 
 
 class RequestsMapping:
