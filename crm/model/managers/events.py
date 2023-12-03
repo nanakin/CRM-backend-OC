@@ -18,7 +18,7 @@ class EventModelMixin:
             if not no_support_assigned:
                 result = session.query(Event)
             else:
-                result = session.query(Event).filter_by(support_contact_id=None)
+                result = session.query(Event).filter(Event.support_contact == None)
             return [row.as_dict(full=False) for row in result]
 
     def detail_event(self, event_id: int) -> dict:

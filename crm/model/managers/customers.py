@@ -14,7 +14,7 @@ class CustomerModelMixin:
     def get_customers(self) -> list[dict]:
         """Retrieve customers from the database and return them as a list of dictionaries."""
         with self.Session() as session:
-            result = session.query(Customer).order_by(Customer.fullname)
+            result = session.query(Customer)
             return [row.as_dict(full=False) for row in result]
 
     def detail_customer(self, customer_id: int) -> dict:

@@ -57,6 +57,6 @@ class Model(EmployeeModelMixin, CustomerModelMixin, ContractModelMixin, EventMod
         with self.Session() as session:
             if session.query(Role).count() > 0:
                 return
-        print("Populating database with a dataset sample ...")
+        print("ℹ️  Populating database with a dataset sample ...")
         populate(self.Session)
         self.roles = self.get_roles()

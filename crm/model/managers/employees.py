@@ -21,9 +21,9 @@ class EmployeeModelMixin:
         with self.Session() as session:
             if role_filter_value:
                 role_id = self.roles[role_filter_value.upper()].value
-                result = session.query(Employee).filter_by(role_id=role_id).order_by(Employee.fullname)
+                result = session.query(Employee).filter_by(role_id=role_id)
             else:
-                result = session.query(Employee).order_by(Employee.fullname)
+                result = session.query(Employee)
             return [row.as_dict() for row in result]
 
     def add_employee(self, username: str, fullname: str, role_name: str) -> dict:
@@ -80,9 +80,9 @@ class EmployeeModelMixin:
             employee = Employee.get(session, username=username)
             role = session.get(Role, role_id)
             if ((role_id != self.roles.COMMERCIAL.value
-                 and session.query(Customer).filter_by(commercial_contact_id=employee.id).count()) or
+                 and session.query(Customer).filter(Customer.commercial_contact == employee).count()) or
                 (role_id != self.roles.SUPPORT.value
-                 and session.query(Event).filter_by(support_contact_id=employee.id).count())):
+                 and session.query(Event).filter(Event.support_contact == employee).count())):
                 raise OperationFailed("Impossible to change the role of this employee."
                                       " Please replace the employee in his role beforehand.")
             employee.role = role
