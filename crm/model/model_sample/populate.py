@@ -1,10 +1,7 @@
 from typing import Any, Callable, Iterable
-import random
-import string
 from sqlalchemy.orm import Session
 
 from .sample import get_contracts, get_customers, get_employees, get_events, get_roles
-from crm.model import Key
 
 
 class Populate:
@@ -53,11 +50,6 @@ class Populate:
         self.events = get_events(contracts=self.contracts, employees=self.employees)
         return self.events.values()
 
-    @with_session_commit
-    def populate_key(self) -> Iterable[Any]:
-        key = Key(secret="".join(random.choices(string.ascii_lowercase, k=120)))
-        return [key]
-
 
 def populate(sessionmaker):
     sampleObj = Populate(sessionmaker)
@@ -66,4 +58,3 @@ def populate(sessionmaker):
     sampleObj.populate_customers()
     sampleObj.populate_contracts()
     sampleObj.populate_events()
-    sampleObj.populate_key()

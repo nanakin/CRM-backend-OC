@@ -27,6 +27,7 @@ class Auth:
         fullname: str
         role: Roles
 
+    secret_key: str
     user: Optional[User] = None
 
     @property
@@ -62,7 +63,7 @@ class AuthenticationControllerMixin:
         token = load_from_persistent()
         if not token:
             return None
-        secret_key = self.model.secret_key
+        secret_key = self.auth.secret_key
         try:
             data = jwt.decode(token, secret_key, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
@@ -74,7 +75,7 @@ class AuthenticationControllerMixin:
 
     def _set_authenticated_user(self, username):
         def create_token():
-            secret_key = self.model.secret_key
+            secret_key = self.auth.secret_key
             token = jwt.encode(
                 {"username": self.auth.user.username, "exp": datetime.utcnow() + timedelta(minutes=30)},
                 secret_key,

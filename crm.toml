@@ -1,3 +1,6 @@
+# "server" configuration file
+# disclaimer: this file is not supposed to be versionned in a real project as a ".env" file wouldn't be.
+
 [error_tracing]
 record = false
 
@@ -7,6 +10,7 @@ echo = false
 reset = false
 
 [database_sample]
-populate_with_sample = true  # populate newly created database with a sample dataset
+populate = true  # populate newly created database with a sample dataset
 
-
+[controller]
+auth_secret_key="RCxuPWd8Z3vN4mGyHrTwkYgAzchXL6EtQSpKB7qsV5neMD92aJc5k2LhAnCVZWaFEzwsmgvbGfNTrU3jMSYdpR9X4xq6HQDu7t8y"

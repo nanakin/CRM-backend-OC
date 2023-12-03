@@ -98,20 +98,6 @@ This application was tested with Python `3.11`  and [Poetry](https://python-poet
    ```
 6. Don't forget to consult the [How to](#how-to) part
 
-## Configuration
-
-Configuration is done via `crm.toml` file. It is located in the project root directory.
-
-To enable/disable error tracing with sentry, change `record` boolean value, under `error_tracing` category.
-
-Available configuration options for `database` category are:
-- `url`: database url
-- `echo`: boolean to enable/disable SQLAlchemy echo mode
-- `reset`: boolean to enable/disable database reset on application start
-
-Available option to populate database with fake data: `populate_with_sample` boolean, under `database_sample`. Note that
-the application requires roles to be created before usage.
-
 ## How To
 
 This application is a command line tool. It is used with the `crm` command.
@@ -228,3 +214,21 @@ See `crm event <subcommand> --help` for more details.
 #### Screenshots
 <img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/ad9bcc92-1952-4cb6-8d45-aabcf1e5a06c" alt="'crm event list' output"><br>
 <img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/a9f6f306-1a34-43ff-88d2-c3af82be229d" alt="'crm event detail' output">
+
+## Server configuration 
+
+> **_DISCLAIMER:_**  This file is not supposed to be versioned in a real-life project as a .env file typically wouldn't be.
+
+Configuration is done via `crm.toml` file. It is located in the project root directory.
+
+To enable/disable error tracing with sentry, change `record` boolean value, under `error_tracing` category.
+
+Available configuration options for `database` category are:
+- `url`: database url
+- `echo`: boolean to enable/disable SQLAlchemy echo mode
+- `reset`: boolean to enable/disable database reset on application start
+
+Available option to populate database with fake data: `populate` boolean, under `database_sample`. Note that
+the application requires roles to be created before usage.
+
+The JWT secret key is stored in `'authentication_secret_key` option, under `controller` category.

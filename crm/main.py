@@ -26,6 +26,21 @@ def log_record_setup() -> None:
     )
 
 
+def app(database_options: dict, sample_options: dict, controller_options: dict) -> None:
+    """initialize Model-View-Controller components."""
+
+    view = View()
+
+    model = Model(**database_options)
+    if sample_options["populate"]:  # testing purpose
+        model.populate_with_sample()
+
+    controller = Controller(view, model, **controller_options)
+
+    # execute user command
+    controller.read_and_execute_command()
+
+
 def main() -> None:
     """The main entry point of the CRM application."""
 
@@ -37,21 +52,15 @@ def main() -> None:
     if do_record:
         log_record_setup()
 
-    # initialize Model-View-Controller components
-
-    view = View()
-
+    # parse database options
     database_options = config["database"]
-    do_fill_db = config["database_sample"]["populate_with_sample"]
+    sample_options = config["database_sample"]
 
-    model = Model(**database_options)
-    if do_fill_db:  # testing purpose
-        model.populate_with_sample()
+    # parse controller options
+    controller_options = config["controller"]
 
-    controller = Controller(view, model)
+    app(database_options, sample_options, controller_options)
 
-    # execute user command
-    controller.read_and_execute_command()
 
 
 if __name__ == "__main__":

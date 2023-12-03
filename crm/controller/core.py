@@ -43,8 +43,8 @@ class Controller(
         finally:
             self.model.end()
 
-    def __init__(self, view: "View", model: "Model") -> None:
+    def __init__(self, view: "View", model: "Model", auth_secret_key) -> None:
         """Initialize the controller."""
         self.view = view
         self.model = model
-        self.auth = Auth()
+        self.auth = Auth(auth_secret_key)
