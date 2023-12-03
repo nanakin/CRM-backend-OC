@@ -8,17 +8,17 @@
   - [About the project design](#about-the-project-design)
 - [Technology](#technology)
 - [Installation](#installation)
-- [Configuration](#configuration)
 - [How to](#how-to)
   - [Authenticate](#authentication)
   - [Manage employees](#employee)
   - [Manage customers](#customer)
   - [Manage contracts](#contract)
   - [Manage events](#event)
+- [Configuration](#server-configuration)
     
 ## Preamble
 This application was designed for a school project with specific requirements and fixed constraints. 
-For example, here client-server architecture was not an available option event if it would have been more appropriate for security reason. 
+For example, here client-server architecture was not an available option even though it would have been more appropriate for security reason. 
 Conversely, CLI was a requirement.
 It was developed in a limited period of time and in this context this project is not intended
 be perfect and to evolve that much once finished. This project is not open to contribution.
@@ -29,25 +29,25 @@ The following need is fictive.
 <img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/d8793335-d6c6-429e-b203-9869ee11eff1" alt="Epic Events logo" width=400>
 
 ### Project context
-Epic Events is French company specialized in organizing events for professionals. The company has been growing for the past few years and 
+Epic Events is a French company specialized in organizing events for professionals. The company has been growing for the past few years and 
 the number of events organized has increased. The company has decided to develop an internal CRM (Customer Relationship Management) software to manage its customers and events.
 The company gave me the business requirements and I had to design and implement the database and develop the software.
-
 
 ### Screenshots
 <img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/1c14e92f-c601-4143-8fcf-5d3ad7e60de9" alt="crm --help" ><br>
 <img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/b40ed70a-c5df-40ba-b79f-038085734d6a" alt="crm customer list"><br>
-<img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/a9f6f306-1a34-43ff-88d2-c3af82be229d" alt="crm event detail">
+<img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/a9f6f306-1a34-43ff-88d2-c3af82be229d" alt="crm event detail"><br>
+<img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/9d2802be-e131-42d2-8cda-6700eeb52754" alt="crm contract permission">
 
 ### About the project design
 The application:
 - is a **command line** tool,
 - displays data with a nice **terminal** user interface (TUI),
 - authentications are **session** based: a token is created at login with a limited lifetime,
-- permissions are **role** based and **resource** based,
+- permissions are **role-based** and **resource-based**,
 - data are stored in a local **database** (schema available [here](https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/2f656690-18a2-48d6-8e74-8391fcc9e836)),
 - subcommands were designed using **DDD** approach (Domain Driven Design) for business efficiency,
-- architecture is using pattern **Model-View-Controller** to have a clear separation between the code manipulating data (model) and the one for the user interface (view),
+- architecture is using the **Model-View-Controller** pattern to have a clear separation between the code manipulating data (model) and the one for the user interface (view),
 - is following **security** best practices (password hashing, JWT token, etc.),
 - errors are **logged** to a monitoring tool,
 - code is **tested** with unit tests and integration tests.
@@ -61,13 +61,15 @@ Other minor facts about the project:
 
 ## Technology
 
-This application was tested with Python `3.11`  and [Poetry](https://python-poetry.org/) `1.5` (for the virtual environnement and dependencies).
+This application was tested with Python `3.11`  and [Poetry](https://python-poetry.org/) `1.5` (for the virtual environment and dependencies).
 ### Main external dependencies:
 
-- Database: [SQLAlchemy ORM](https://pypi.org/project/SQLAlchemy/) using [SQLite](https://www.sqlite.org)
+- Database: [SQLAlchemy ORM](https://pypi.org/project/SQLAlchemy/) using SQLite
 - Command Line Interface: [click](https://pypi.org/project/click/) 
 - Terminal User Interface: [rich](https://pypi.org/project/rich/)
 - Authentication: [PyJWT](https://pypi.org/project/PyJWT/)
+
+Development dependencies:  
 - Error logging and monitoring: [Sentry](https://pypi.org/project/sentry-sdk/)
 - Testing: [Pytest](https://pypi.org/project/pytest/)
 
@@ -199,7 +201,7 @@ and must be associated with a contract.
 *A filter `--no-support-assigned` is available to list only events without a support assigned.*
 - To see event's details:  `crm event detail`
 - To create a new event:  `crm event add` <br>
-*The contract associated must be signed to allow this operation.*
+*The associated contract must be signed to allow this operation.*
 - To assign a support to an event:  `crm event set-support`
 - To update event's details:  `crm event update` <br>
 *The event's name, date, location, attendees and note can be updated by this command.*
@@ -215,7 +217,7 @@ See `crm event <subcommand> --help` for more details.
 <img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/ad9bcc92-1952-4cb6-8d45-aabcf1e5a06c" alt="'crm event list' output"><br>
 <img src="https://github.com/nanakin/OC-P12-CRM-backend/assets/14202917/a9f6f306-1a34-43ff-88d2-c3af82be229d" alt="'crm event detail' output">
 
-## Server configuration 
+## Server Configuration
 
 > **_DISCLAIMER:_**  This file is not supposed to be versioned in a real-life project as a .env file typically wouldn't be.
 

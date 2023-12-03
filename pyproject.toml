@@ -9,7 +9,7 @@ readme = "README.md"
 crm = "crm.main:main"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 rich = "^13.7.0"
 click = "^8.1.7"
 SQLAlchemy = "^2.0.23"
