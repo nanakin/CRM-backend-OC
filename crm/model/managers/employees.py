@@ -26,13 +26,17 @@ class EmployeeModelMixin:
                 result = session.query(Employee).order_by(Employee.fullname)
             return [row.as_dict() for row in result]
 
-    def add_employee(self, username: str, fullname: str) -> dict:
+    def add_employee(self, username: str, fullname: str, role_name: str) -> dict:
         """Add an employee to the database (with a generated password) and return it as dictionary."""
+        valid_roles_names = [role.name for role in self.roles]
+        if role_name.upper() not in valid_roles_names:
+            raise OperationFailed(f"Invalid role, choose between: {' '.join(valid_roles_names)}.")
+        role_id = self.roles[role_name.upper()].value  # temp
         try:
             with self.Session() as session:
                 generated_password = "".join(random.choices(string.ascii_lowercase, k=12))
                 employee = Employee(
-                    username=username, fullname=fullname, password=generated_password, role_id=self.roles.NONE.value
+                    username=username, fullname=fullname, password=generated_password, role_id=role_id
                 )
                 session.add(employee)
                 session.commit()

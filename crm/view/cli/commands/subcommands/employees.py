@@ -11,6 +11,15 @@ def cli_employee():
 @cli_employee.command(help="Add a new employee")
 @click.option("--fullname", prompt=True, prompt_required=True, type=str, help="Define the employee full name")
 @click.option("--username", prompt=True, prompt_required=True, type=str, help="Define the employee username")
+@click.option(
+    "--role",
+    "role_name",
+    prompt=True,
+    prompt_required=True,
+    type=click.Choice(["SUPPORT", "ADMINISTRATOR", "COMMERCIAL", "NONE"], case_sensitive=False),
+    default="NONE",
+    help="Specify the role",
+)
 def add(**kwargs) -> FullRequest:
     """Command to add a new employee."""
     return FullRequest(Request.NEW_EMPLOYEE, **kwargs)
@@ -38,7 +47,8 @@ def set_password(**kwargs) -> FullRequest:
     "role_name",
     prompt=True,
     prompt_required=True,
-    type=click.Choice(["SUPPORT", "ADMINISTRATOR", "COMMERCIAL"], case_sensitive=False),
+    type=click.Choice(["SUPPORT", "ADMINISTRATOR", "COMMERCIAL", "NONE"], case_sensitive=False),
+    default="NONE",
     help="Specify the role",
 )
 def set_role(**kwargs) -> FullRequest:
