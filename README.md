@@ -221,7 +221,7 @@ See `crm event <subcommand> --help` for more details.
 
 Configuration is done via `crm.toml` file. It is located in the project root directory.
 
-To enable/disable error tracing with sentry, change `record` boolean value, under `error_tracing` category.
+To enable/disable error tracing with sentry, change `enabled` boolean value, under `error_tracing` category, and set the `dns` key accordingly.
 
 Available configuration options for `database` category are:
 - `url`: database url
