@@ -16,7 +16,10 @@ def get_roles():
 def get_employees(roles):
     employees = {
         "caroline": Employee(
-            fullname="Caroline Cridou", username="caroline_c", password="caroline", role_id=roles["COMMERCIAL"].id
+            fullname="Caroline Cridouta", username="caroline_c", password="caroline", role_id=roles["COMMERCIAL"].id
+        ),
+        "christelle": Employee(
+            fullname="Christelle Carlou", username="christelle_c", password="christelle", role_id=roles["COMMERCIAL"].id
         ),
         "christophe": Employee(
             fullname="Christophe Criselleau",
@@ -29,6 +32,9 @@ def get_employees(roles):
         ),
         "amandine": Employee(
             fullname="Amandine Aprani", username="amandine_a", password="amandine", role_id=roles["ADMINISTRATOR"].id
+        ),
+        "amori": Employee(
+            fullname="Amori Aurpière", username="amori_a", password="amori", role_id=roles["ADMINISTRATOR"].id
         ),
         "sebastien": Employee(
             fullname="Sebastien Serbot", username="sebastien_s", password="sebastien", role_id=roles["SUPPORT"].id
@@ -48,7 +54,7 @@ def get_customers(employees):
             commercial_contact_id=employees["caroline"].id,
         ),
         "Withings": Customer(
-            fullname="Céline Katari",
+            fullname="Céline Karari",
             email="celine@withings.fr",
             phone="+337849900022",
             company="Withings",
@@ -61,12 +67,12 @@ def get_customers(employees):
             company="Burger King",
             commercial_contact_id=employees["caroline"].id,
         ),
-        "mariée": Customer(
-            fullname="Inès Pradelle",
-            email="ines.pradelle@gmail.com",
+        "M6": Customer(
+            fullname="Inès Pradella",
+            email="ines.pradella@gmail.com",
             phone="+33673890044",
-            company="",
-            commercial_contact_id=employees["christophe"].id,
+            company="M6 Events",
+            commercial_contact_id=employees["christelle"].id,
         ),
     }
     return customers
@@ -74,8 +80,11 @@ def get_customers(employees):
 
 def get_contracts(customers):
     contracts = {
-        "BK_announcement": Contract(customer_id=customers["BK"].id, signed=False, total_amount=45000),
+        "BK_announcement": Contract(customer_id=customers["BK"].id, signed=True, total_amount=45000),
+        "BK_announcement_2": Contract(customer_id=customers["BK"].id, signed=True, total_amount=1000),
         "EDF_SG": Contract(customer_id=customers["EDF"].id, signed=True),
+        "EDF_announcement": Contract(customer_id=customers["EDF"].id, signed=False),
+        "Festival": Contract(customer_id=customers["M6"].id, signed=False),
         "Withings_party": Contract(
             customer_id=customers["Withings"].id,
             signed=True,
@@ -96,6 +105,16 @@ def get_events(contracts, employees):
             location="Jardin des plantes de Paris",
             note="En cas de pluie, déplacer les chaises dans la salle de projection.",
         ),
+        "BK_menu": Event(
+            name="Nouveau menu raclette",
+            contract_id=contracts["BK_announcement_2"].id,
+            support_contact_id=employees["sarah"].id,
+            start=datetime.datetime(year=2024, month=10, day=21, hour=20),
+            end=datetime.datetime(year=2024, month=10, day=21, hour=21),
+            attendees=100,
+            location="Salle des fêtes de Nantes",
+            note="Événement privé. Organiser la restauration sur place.",
+        ),
         "BK_opening": Event(
             name="Inauguration d'un nouveau BK",
             contract_id=contracts["BK_announcement"].id,
@@ -103,8 +122,18 @@ def get_events(contracts, employees):
             start=datetime.datetime(year=2024, month=5, day=20, hour=20),
             end=datetime.datetime(year=2024, month=5, day=20, hour=21),
             attendees=300,
-            location="Théatre de Fontainebleau",
-            note="Évenement accessible au public, sur réservation. Prévoir des pancartes.",
+            location="Théatre de Nantes",
+            note="Événement accessible au public, sur réservation. Prévoir des pancartes.",
         ),
+        "Withings_party": Event(
+            name="Lancement d'une nouvelle montre",
+            contract_id=contracts["Withings_party"].id,
+            support_contact_id=employees["sebastien"].id,
+            start=datetime.datetime(year=2024, month=12, day=20, hour=20),
+            end=datetime.datetime(year=2024, month=12, day=20, hour=22),
+            attendees=1000,
+            location="Salle des fêtes de Paris 9e",
+            note="Des bons d'achats seront distribués aux salariés à la sortie, prévoir plusieurs intervenants."
+        )
     }
     return events
