@@ -1,13 +1,12 @@
 from enum import Enum
 
 from sqlalchemy import create_engine, event
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import Engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
 from .managers import ContractModelMixin, CustomerModelMixin, EmployeeModelMixin, EventModelMixin
 from .models import Base, Role
-
 
 DEFAULT_DB = "sqlite://"  # in-memory SQLite database
 

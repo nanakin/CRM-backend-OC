@@ -1,8 +1,9 @@
-import jwt
-from datetime import datetime, timedelta
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
+
+import jwt
 
 from .common import OperationFailed, Request, Roles, requests_map
 

@@ -1,4 +1,5 @@
 from typing import Any, Callable, Iterable
+
 from sqlalchemy.orm import Session
 
 from .sample import get_contracts, get_customers, get_employees, get_events, get_roles

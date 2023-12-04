@@ -19,7 +19,10 @@ def get_employees(roles):
             fullname="Caroline Cridouta", username="caroline_c", password="caroline", role_id=roles["COMMERCIAL"].id
         ),
         "christelle": Employee(
-            fullname="Christelle Carlou", username="christelle_c", password="christelle", role_id=roles["COMMERCIAL"].id
+            fullname="Christelle Carlou",
+            username="christelle_c",
+            password="christelle",
+            role_id=roles["COMMERCIAL"].id,
         ),
         "christophe": Employee(
             fullname="Christophe Criselleau",
@@ -133,7 +136,7 @@ def get_events(contracts, employees):
             end=datetime.datetime(year=2024, month=12, day=20, hour=22),
             attendees=1000,
             location="Salle des fêtes de Paris 9e",
-            note="Des bons d'achats seront distribués aux salariés à la sortie, prévoir plusieurs intervenants."
-        )
+            note="Des bons d'achats seront distribués aux salariés à la sortie, prévoir plusieurs intervenants.",
+        ),
     }
     return events

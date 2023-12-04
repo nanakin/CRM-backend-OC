@@ -3,6 +3,7 @@ from crm.view.cli.commands.subcommands import cli_customer
 from tests.integration.cli_signatures.common import matching_signature
 from tests.unit.view.cli_subcommands.common import invoke_cli
 
+
 def test_cli_customer_list_signature():
     """Verify the signature of the 'crm customer list' command."""
     result = invoke_cli(cli_customer, ["list"])
@@ -21,5 +22,8 @@ def test_cli_customer_add_signature():
     """
     Verify the signature of the mapped controller function and the return value of the 'crm customer add' command.
     """
-    result = invoke_cli(cli_customer, ["add", "--fullname", "random", "--company", "company", "--phone", "0146310000", "--email", "mail@mail.com"])
+    result = invoke_cli(
+        cli_customer,
+        ["add", "--fullname", "random", "--company", "company", "--phone", "0146310000", "--email", "mail@mail.com"],
+    )
     assert matching_signature(CustomersControllerMixin.new_customer, result.return_value.params)

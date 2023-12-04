@@ -1,4 +1,4 @@
-from typing import Optional, Iterable
+from typing import Iterable, Optional
 
 from crm.view.interface import IView
 from crm.view.log import LogStatus

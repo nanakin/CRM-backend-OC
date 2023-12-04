@@ -1,7 +1,8 @@
 from rich.prompt import Prompt
 
-from .console import console
 from crm.view.common import ViewOperationFailed
+
+from .console import console
 
 
 def ask_credentials():

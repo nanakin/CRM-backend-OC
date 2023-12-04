@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Self, Optional
+from typing import Optional, Self
 
 from sqlalchemy import DateTime, ForeignKey, Unicode
 from sqlalchemy.orm import Mapped, Session, mapped_column, relationship

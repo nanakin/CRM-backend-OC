@@ -5,6 +5,7 @@ from .common import Request, Roles, requests_map
 if TYPE_CHECKING:
     from crm.model import Model
     from crm.view import View
+
     from .authentication import Auth
 
 

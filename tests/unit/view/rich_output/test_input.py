@@ -1,6 +1,7 @@
-from crm.view.cli.terminal.input import ask_credentials
 from unittest import mock
+
 from crm.view.cli.terminal.display import console
+from crm.view.cli.terminal.input import ask_credentials
 
 
 def test_ask_credentials():

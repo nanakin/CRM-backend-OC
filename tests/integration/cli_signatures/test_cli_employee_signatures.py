@@ -22,7 +22,9 @@ def test_cli_employee_add_signature():
     """
     Verify the signature of the mapped controller function and the return value of the 'crm employee add' command.
     """
-    result = invoke_cli(cli_employee, ["add", "--fullname", "random", "--username", "random", "--role", "ADMINISTRATOR"])
+    result = invoke_cli(
+        cli_employee, ["add", "--fullname", "random", "--username", "random", "--role", "ADMINISTRATOR"]
+    )
     assert matching_signature(EmployeesControllerMixin.new_employee, result.return_value.params)
 
 
@@ -39,7 +41,9 @@ def test_cli_employee_set_password_signature():
     Verify the signature of the mapped controller function and the return value of the 'crm employee set-password'
     command.
     """
-    result = invoke_cli(cli_employee, ["set-password", "--password", "random_password", "--username", "random_username"])
+    result = invoke_cli(
+        cli_employee, ["set-password", "--password", "random_password", "--username", "random_username"]
+    )
     assert matching_signature(EmployeesControllerMixin.set_password_employee, result.return_value.params)
 
 

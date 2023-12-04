@@ -16,7 +16,7 @@ class EventModelMixin:
         """Retrieve events from the database and return them as a list of dictionaries."""
         with self.Session() as session:
             if no_support_assigned:
-                result = session.query(Event).filter(Event.support_contact == None)
+                result = session.query(Event).filter(Event.support_contact == None)  # noqa: E711
             elif assigned_to:
                 result = session.query(Event).filter_by(support_contact_id=assigned_to)
             else:

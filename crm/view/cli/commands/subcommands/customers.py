@@ -35,7 +35,9 @@ def update(**kwargs) -> FullRequest:
 
 @cli_customer.command(help="Set a new commercial contact")
 @click.option("--customer-id", prompt=True, prompt_required=True, type=int, help="Specify the customer ID")
-@click.option("--commercial-username", prompt=True, prompt_required=True, type=str, help="Specify the username of the commercial")
+@click.option(
+    "--commercial-username", prompt=True, prompt_required=True, type=str, help="Specify the username of the commercial"
+)
 def set_commercial(**kwargs) -> FullRequest:
     """Command to set a new commercial contact."""
     return FullRequest(Request.SET_CUSTOMER_COMMERCIAL, **kwargs)

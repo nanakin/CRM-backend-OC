@@ -3,9 +3,9 @@ from functools import wraps
 from typing import TYPE_CHECKING, Callable
 
 from crm.model import OperationFailed
+from crm.view import ViewOperationFailed
 from crm.view.log import LogStatus
 from crm.view.requests import Request  # noqa
-from crm.view import ViewOperationFailed
 
 if TYPE_CHECKING:
     from crm.controller.core import Controller

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from crm.view import FullRequest, ViewOperationFailed
 from crm.model import OperationFailed
+from crm.view import FullRequest, ViewOperationFailed
 
 from .manage import (
     Auth,

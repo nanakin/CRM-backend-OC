@@ -5,7 +5,7 @@ from typing import Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from crm.model.models import Employee, Customer, Role, Event, OperationFailed
+from crm.model.models import Customer, Employee, Event, OperationFailed, Role
 
 
 class EmployeeModelMixin:
@@ -35,9 +35,7 @@ class EmployeeModelMixin:
         try:
             with self.Session() as session:
                 generated_password = "".join(random.choices(string.ascii_lowercase, k=12))
-                employee = Employee(
-                    username=username, fullname=fullname, password=generated_password, role_id=role_id
-                )
+                employee = Employee(username=username, fullname=fullname, password=generated_password, role_id=role_id)
                 session.add(employee)
                 session.commit()
                 return employee.as_dict()
@@ -51,9 +49,10 @@ class EmployeeModelMixin:
             try:
                 session.delete(employee)
                 session.commit()
-            except IntegrityError as e:
-                raise OperationFailed("Impossible to delete this employee."
-                                      " Please replace the employee in his role beforehand.")
+            except IntegrityError:
+                raise OperationFailed(
+                    "Impossible to delete this employee." " Please replace the employee in his role beforehand."
+                )
 
     def valid_password(self, username: str, password: str) -> bool:
         """Return True if the password is valid, False otherwise."""
@@ -79,12 +78,17 @@ class EmployeeModelMixin:
         with self.Session() as session:
             employee = Employee.get(session, username=username)
             role = session.get(Role, role_id)
-            if ((role_id != self.roles.COMMERCIAL.value
-                 and session.query(Customer).filter(Customer.commercial_contact == employee).count()) or
-                (role_id != self.roles.SUPPORT.value
-                 and session.query(Event).filter(Event.support_contact == employee).count())):
-                raise OperationFailed("Impossible to change the role of this employee."
-                                      " Please replace the employee in his role beforehand.")
+            if (
+                role_id != self.roles.COMMERCIAL.value
+                and session.query(Customer).filter(Customer.commercial_contact == employee).count()
+            ) or (
+                role_id != self.roles.SUPPORT.value
+                and session.query(Event).filter(Event.support_contact == employee).count()
+            ):
+                raise OperationFailed(
+                    "Impossible to change the role of this employee."
+                    " Please replace the employee in his role beforehand."
+                )
             employee.role = role
             session.add(employee)
             session.commit()

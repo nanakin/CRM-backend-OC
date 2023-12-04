@@ -1,11 +1,10 @@
 """The main file of the command line interface module."""
 
-import sys
-
 import click
 
-from crm.view.requests import FullRequest
 from crm.view.common import ViewOperationFailed
+from crm.view.requests import FullRequest
+
 from .subcommands import cli_authentication, cli_contract, cli_customer, cli_employee, cli_event
 
 
