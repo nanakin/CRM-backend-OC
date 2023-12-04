@@ -45,7 +45,7 @@ class Contract(Base):
         }
         if full:
             data.update(
-                {"Total amount": f"{(self.total_amount / 100):.2f}  €",
+                {"Total amount": f"{(self.total_amount / 100):.2f} €",
                  "Creation date": str(datetime.date(self.creation_date))}
             )
         return data

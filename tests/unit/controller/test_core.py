@@ -21,6 +21,6 @@ def test_controller_execute(user_request):
     model = mock.Mock()
     mocked_method = mock.MagicMock(return_value=None)
     requests_map.allowed_functions[user_request] = mocked_method
-    controller = Controller(view, model)
+    controller = Controller(view, model, mock.Mock())
     controller.read_and_execute_command()
     mocked_method.assert_called_once()

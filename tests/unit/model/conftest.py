@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from crm.model.models import Base
+from crm.model.models import Base, Customer
 
 TEST_DB = "sqlite://"  # in-memory SQLite database
 
@@ -14,6 +14,7 @@ def db_engine(request):
     engine = create_engine(db_url, echo=False)
     Base.metadata.create_all(engine)
     yield engine
+    engine.dispose()
 
 
 @pytest.fixture(scope="session")
@@ -35,3 +36,4 @@ def db_session(db_session_factory):
     yield session
     session.rollback()
     session.close()
+

@@ -117,7 +117,7 @@ class TestCliCustomerSetCommercial:
         assert result.exit_code == 0
         assert full_request.request.value == Request.SET_CUSTOMER_COMMERCIAL.value
         assert full_request.params["customer_id"] == 1
-        assert full_request.params["username"] == "random_username"
+        assert full_request.params["commercial_username"] == "random_username"
 
     def test_cli_customer_set_commercial_options(self):
         """Test options of 'crm customer set-commercial' command."""

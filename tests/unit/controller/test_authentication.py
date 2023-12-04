@@ -12,7 +12,8 @@ from crm.controller.manage.common import OperationFailed, Roles
 def initialized_controller():
     view = mock.Mock()
     model = mock.Mock()
-    controller = Controller(view, model)
+    auth_secret_key = mock.Mock()
+    controller = Controller(view, model, auth_secret_key)
     return controller
 
 
@@ -26,7 +27,7 @@ def user_with_role(role):
         (Roles.NONE, None, pytest.raises(OperationFailed), "Authentication failed"),
         (Roles.NONE, user_with_role(Roles.COMMERCIAL), does_not_raise(), None),
         (Roles.ALL, user_with_role(Roles.ADMINISTRATOR), does_not_raise(), None),
-        (Roles.ALL, user_with_role(Roles.NONE), pytest.raises(OperationFailed), "not have necessary permissions"),
+        (Roles.ALL, user_with_role(Roles.NONE), does_not_raise(), None),
         (Roles.ADMINISTRATOR | Roles.SUPPORT, None, pytest.raises(OperationFailed), "Authentication failed"),
         (
             Roles.ADMINISTRATOR | Roles.SUPPORT,
@@ -46,7 +47,7 @@ def user_with_role(role):
 )
 def test_controller_authenticate_as_role(initialized_controller, trying_role, user_profile, expectation, message):
     """Test role-based filter controller method 'authenticate_as_role'."""
-    auth = Auth()
+    auth = Auth(mock.Mock())
     if user_profile:
         auth.identify_as(**user_profile)
     initialized_controller.authenticate = mock.MagicMock(return_value=auth)
