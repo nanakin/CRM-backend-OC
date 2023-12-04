@@ -56,6 +56,9 @@ def detail(**kwargs) -> FullRequest:
 
 @cli_event.command(help="List existing events")
 @click.option("--no-support-assigned", is_flag=True, default=False, help="Display events without support only")
+@click.option("--assigned-to-me", is_flag=True, default=False, help="Display events assigned to me only")
 def list(**kwargs) -> FullRequest:
     """Command to list existing events."""
+    if kwargs["no_support_assigned"] and kwargs["assigned_to_me"]:
+        raise click.BadParameter("You cannot use both options --no-support-assigned and --assigned-to-me.")
     return FullRequest(Request.LIST_EVENTS, **kwargs)

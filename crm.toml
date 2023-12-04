@@ -4,6 +4,7 @@
 [error_tracing]
 enabled = true
 dns = "https://59ffa0946fb3cd6311053048552ef225@o4506144422494208.ingest.sentry.io/4506332104884224"
+
 [database]
 url = "sqlite:///crm.db"
 echo = false

@@ -45,7 +45,7 @@ class ContractsControllerMixin:
     def update_contract(self, contract_uuid: UUID, customer_id: int, total_amount: float) -> None:
         """Update contract fields in database and display the contract."""
         displayable_contract = self.model.update_contract(contract_uuid, customer_id, total_amount, self.auth.user_id)
-        fields_name = {"Total_amount": total_amount, "Customer": customer_id}
+        fields_name = {"Total amount": total_amount, "Customer": customer_id}
         self.view.display_contract(
             displayable_contract, focus=[name for name, new_value in fields_name.items() if new_value is not None]
         )

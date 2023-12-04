@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Iterable
 
 from crm.view.interface import IView
 from crm.view.log import LogStatus
@@ -35,7 +35,7 @@ class View(IView):
         colors = {"title": View.colors["Employee"], "Full name": View.colors["Employee"], **View.colors}
         display_table(title="Employees 👷 ", data=data, colors=colors)
 
-    def display_employee(self, data: dict, focus: Optional[list] = None):
+    def display_employee(self, data: dict, focus: Optional[Iterable] = None):
         colors = {"title": View.colors["Employee"]}
         display_panel(title="Employee 👷 ", data=data, subtitle=data["Full name"], focus=focus, colors=colors)
 
@@ -43,7 +43,7 @@ class View(IView):
         colors = {"title": View.colors["Customer"], "Full name": View.colors["Customer"], **View.colors}
         display_table(title="Customers 🏭 ", data=data, colors=colors)
 
-    def display_customer(self, data: dict, focus: list | None = None):
+    def display_customer(self, data: dict, focus: Optional[Iterable] = None):
         colors = {"title": View.colors["Customer"]}
         display_panel(title="Customer 🏭 ", data=data, subtitle=data["Full name"], focus=focus, colors=colors)
 
@@ -51,7 +51,7 @@ class View(IView):
         colors = {"title": View.colors["Contract"], "UUID": View.colors["Contract"], **View.colors}
         display_table(title="Contracts 📃 ", data=data, colors=colors)
 
-    def display_contract(self, data: dict, focus: list | None = None):
+    def display_contract(self, data: dict, focus: Optional[Iterable] = None):
         colors = {"title": View.colors["Contract"]}
         display_panel(title="Contract 📃 ", data=data, subtitle=data["UUID"], focus=focus, colors=colors)
 
@@ -59,7 +59,7 @@ class View(IView):
         colors = {"title": View.colors["Event"], "Name": View.colors["Event"], **View.colors}
         display_table(title="Events 🎪 ", data=data, colors=colors)
 
-    def display_event(self, data: dict, focus: list | None = None):
+    def display_event(self, data: dict, focus: Optional[Iterable] = None):
         colors = {"title": View.colors["Event"]}
         display_panel(title="Event 🎪 ", data=data, subtitle=data["Name"], focus=focus, colors=colors)
 

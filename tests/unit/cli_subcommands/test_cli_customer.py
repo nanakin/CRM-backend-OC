@@ -121,11 +121,11 @@ class TestCliCustomerSetCommercial:
 
     def test_cli_customer_set_commercial_options(self):
         """Test options of 'crm customer set-commercial' command."""
-        result = invoke_cli(cli_customer, ["set-commercial", "--customer-id", "1", "--username", "random_username"])
+        result = invoke_cli(cli_customer, ["set-commercial", "--customer-id", "1", "--commercial-username", "random_username"])
         full_request = result.return_value
         assert result.exit_code == 0
         assert full_request.params["customer_id"] == 1
-        assert full_request.params["username"] == "random_username"
+        assert full_request.params["commercial_username"] == "random_username"
 
 
 class TestCliCustomerUpdate:

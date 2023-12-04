@@ -19,9 +19,10 @@ class EventsControllerMixin:
     # -------------------- CRM Commands below --------------------------
 
     @requests_map.register(Request.LIST_EVENTS, required_role=Roles.ALL)
-    def list_events(self, no_support_assigned: bool) -> None:
+    def list_events(self, no_support_assigned: bool, assigned_to_me: bool) -> None:
         """Retrieve events from database and display them."""
-        displayable_events = self.model.get_events(no_support_assigned)
+        assigned_to = self.auth.user_id if assigned_to_me else None
+        displayable_events = self.model.get_events(no_support_assigned, assigned_to=assigned_to)
         self.view.display_events(displayable_events)
 
     @requests_map.register(Request.DETAIL_EVENT, required_role=Roles.ALL)
@@ -59,5 +60,5 @@ class EventsControllerMixin:
             "Note": note,
         }
         self.view.display_event(
-            displayable_event, focus=[name for name, new_value in fields_name if new_value is not None]
+            displayable_event, focus=[name for name, new_value in fields_name.items() if new_value is not None]
         )

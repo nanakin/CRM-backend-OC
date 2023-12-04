@@ -36,7 +36,7 @@ class Customer(Base):
             f"creation_date={self.creation_date!r}, last_modified={self.last_modified!r})"
         )
 
-    def as_dict(self, full: bool = False) -> dict:
+    def as_dict(self, full: bool = True) -> dict:
         """Abstraction of customer database model object with a dictionary."""
         data = {
             "ID": str(self.id),
@@ -49,8 +49,8 @@ class Customer(Base):
                 {
                     "Email": str(self.email),
                     "Phone": str(self.phone),
-                    "Creation date": str(self.creation_date),
-                    "Last modification": str(self.last_modified),
+                    "Creation date": str(datetime.date(self.creation_date)),
+                    "Last modification": str(datetime.date(self.last_modified)),
                 }
             )
         return data

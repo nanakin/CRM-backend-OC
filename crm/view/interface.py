@@ -1,5 +1,6 @@
 """Define the interface for all the views classes, these methods will be used by the controller."""
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from crm.view.log import LogStatus
 from crm.view.requests import FullRequest
@@ -9,7 +10,7 @@ class IView(ABC):
     """A valid view must implements the following methods."""
 
     @abstractmethod
-    def read_user_input(self) -> FullRequest | None:
+    def read_user_input(self) -> Optional[FullRequest]:
         """Retrieve user command (request)."""
 
     @abstractmethod

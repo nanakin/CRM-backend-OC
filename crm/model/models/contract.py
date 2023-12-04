@@ -37,14 +37,16 @@ class Contract(Base):
         commercial = self.customer.commercial_contact
         data = {
             "UUID": str(self.id).upper(),
+            "Company": str(self.customer.company),
             "Customer": str(self.customer),
             "Commercial": str(commercial),
             "Signed": str(self.signed),
-            "Total due": str((self.total_amount - self.total_paid) / 100) + " €",
+            "Total due": f"{((self.total_amount - self.total_paid) / 100):.2f} €",
         }
         if full:
             data.update(
-                {"Total amount": str(self.total_amount / 100) + " €", "Creation date": str(self.creation_date)}
+                {"Total amount": f"{(self.total_amount / 100):.2f}  €",
+                 "Creation date": str(datetime.date(self.creation_date))}
             )
         return data
 

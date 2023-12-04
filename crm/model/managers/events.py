@@ -12,13 +12,15 @@ class EventModelMixin:
 
     Session: sessionmaker
 
-    def get_events(self, no_support_assigned: bool) -> list[dict]:
+    def get_events(self, no_support_assigned: bool, assigned_to: Optional[int]) -> list[dict]:
         """Retrieve events from the database and return them as a list of dictionaries."""
         with self.Session() as session:
-            if not no_support_assigned:
-                result = session.query(Event)
-            else:
+            if no_support_assigned:
                 result = session.query(Event).filter(Event.support_contact == None)
+            elif assigned_to:
+                result = session.query(Event).filter_by(support_contact_id=assigned_to)
+            else:
+                result = session.query(Event)
             return [row.as_dict(full=False) for row in result]
 
     def detail_event(self, event_id: int) -> dict:
