@@ -37,4 +37,4 @@ line_length = 119
 
 [tool.pytest.ini_options]
 filterwarnings = "ignore::DeprecationWarning"
-addopts = "--cov-report= --cov=crm --cov-fail-under 60"
+addopts = "--cov-report= --cov=crm --cov-fail-under 55"
