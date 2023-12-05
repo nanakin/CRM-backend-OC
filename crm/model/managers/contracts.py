@@ -17,7 +17,7 @@ class ContractModelMixin:
         """Raises an exception if the employee doesn't have the authorization to edit the contract."""
 
         connected_employee = Employee.get(session, employee_id=connected_employee_id)
-        if connected_employee.role.name.upper() == self.roles.COMMERCIAL.name.upper():  # to change
+        if self.is_role_equal(connected_employee.role, self.roles.COMMERCIAL):
             if contract.customer.commercial_contact != connected_employee:
                 raise OperationFailed(
                     f"The employee {connected_employee.fullname} does not have the permission to edit "

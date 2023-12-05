@@ -75,7 +75,7 @@ class CustomerModelMixin:
         """Update the commercial associated to customer in database (and return the customer as dictionary)."""
         with self.Session() as session:
             commercial = Employee.get(session, username=commercial_username)
-            if commercial.role.name.upper() != self.roles.COMMERCIAL.name.upper():  # temp
+            if not self.is_role_equal(commercial.role, self.roles.COMMERCIAL):
                 raise OperationFailed(
                     f"The employee {commercial} assigned as commercial is not a commercial ({commercial.role})."
                 )

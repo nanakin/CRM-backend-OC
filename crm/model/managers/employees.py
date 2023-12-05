@@ -28,10 +28,7 @@ class EmployeeModelMixin:
 
     def add_employee(self, username: str, fullname: str, role_name: str) -> dict:
         """Add an employee to the database (with a generated password) and return it as dictionary."""
-        valid_roles_names = [role.name for role in self.roles]
-        if role_name.upper() not in valid_roles_names:
-            raise OperationFailed(f"Invalid role, choose between: {' '.join(valid_roles_names)}.")
-        role_id = self.roles[role_name.upper()].value  # temp
+        role_id = self.get_role_id_from_name(role_name)
         try:
             with self.Session() as session:
                 generated_password = "".join(random.choices(string.ascii_lowercase, k=12))
@@ -71,10 +68,7 @@ class EmployeeModelMixin:
 
     def set_role(self, username: str, role_name: str) -> dict:
         """Update the role of an employee in database (and return the employee as dictionary)."""
-        valid_roles_names = [role.name for role in self.roles]
-        if role_name.upper() not in valid_roles_names:
-            raise OperationFailed(f"Invalid role, choose between: {' '.join(valid_roles_names)}.")
-        role_id = self.roles[role_name.upper()].value  # temp
+        role_id = self.get_role_id_from_name(role_name)
         with self.Session() as session:
             employee = Employee.get(session, username=username)
             role = session.get(Role, role_id)

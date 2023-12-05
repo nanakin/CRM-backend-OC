@@ -50,7 +50,7 @@ class EventModelMixin:
         """Update the support associated to the event in database (and return the event as a dictionary)."""
         with self.Session() as session:
             support = Employee.get(session, username=support_username)
-            if support.role.name.upper() != self.roles.SUPPORT.name.upper():  # temp
+            if not self.is_role_equal(support.role, self.roles.SUPPORT):
                 raise OperationFailed(
                     f"The employee {support} assigned to support the event is not a support ({support.role})."
                 )
